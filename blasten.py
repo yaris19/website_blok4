@@ -86,7 +86,7 @@ def read_xml_file():
     return result_list
 
 
-read_xml_file()
+read_file()
 
 # test programs:
 # def read():
