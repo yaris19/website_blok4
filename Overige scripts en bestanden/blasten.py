@@ -33,14 +33,26 @@ def read_file():
     excel_file = open('data_groep7.csv', 'r')
     seq_forward = []
     seq_reverse = []
+    score_forward = 0
+    score_reverse = 0
     counter_forward = 1
     counter_reverse = length_file + 1
     for lines in excel_file:
         line = lines.split('\t')
-        seq_forward.append([line[0], line[1], line[2], counter_forward])
-        seq_reverse.append([line[3], line[4], line[5], counter_reverse])
+        for score_for in line[2]:
+            score_forward += ord(score_for) - 33
+        for score_rev in line[5]:
+            score_reverse += ord(score_rev) - 33
+        seq_forward.append([line[0], line[1], round(score_forward/len(line[2])
+                                                    , 2), counter_forward])
+        seq_reverse.append([line[3], line[4], round(score_reverse/len(line[5])
+                                                    , 2), counter_reverse])
         counter_forward += 1
         counter_reverse += 1
+        score_reverse = 0
+        score_forward = 0
+    for i in range(len(seq_forward)):
+        print(i+1, seq_forward[i][2])
 
     file_forward_first = open('read1_sequences_first50.fasta', 'w')
     file_forward_last = open('read1_sequences_last50.fasta', 'w')
@@ -120,3 +132,6 @@ def read_xml_file(file_name, first50, read1):
         sequence_id += 1
         counter = 0
     return result_list
+
+
+main()
