@@ -43,16 +43,16 @@ def read_file():
             score_forward += ord(score_for) - 33
         for score_rev in line[5]:
             score_reverse += ord(score_rev) - 33
-        seq_forward.append([line[0], line[1], round(score_forward/len(line[2])
-                                                    , 2), counter_forward])
-        seq_reverse.append([line[3], line[4], round(score_reverse/len(line[5])
-                                                    , 2), counter_reverse])
+        seq_forward.append(
+            [line[0], line[1], round(score_forward / len(line[2])
+                                     , 2), counter_forward])
+        seq_reverse.append(
+            [line[3], line[4], round(score_reverse / len(line[5])
+                                     , 2), counter_reverse])
         counter_forward += 1
         counter_reverse += 1
         score_reverse = 0
         score_forward = 0
-    for i in range(len(seq_forward)):
-        print(i+1, seq_forward[i][2])
 
     file_forward_first = open('read1_sequences_first50.fasta', 'w')
     file_forward_last = open('read1_sequences_last50.fasta', 'w')
@@ -114,20 +114,27 @@ def read_xml_file(file_name, first50, read1):
         sequence_id = 151
 
     for result in blast_results:
-        for i in range(len(result)):
-            # print(result[1]._dict_)
-            if counter < 5:
-                accession = result[i].accession
-                description = result[i].description
-                id_ = result[i][0].query_id
-                bitscore = result[i][0].bitscore
-                evalue = result[i][0].evalue
-                ident_num = result[i][0].ident_num
-                pos_num = result[i][0].pos_num
-                gap_num = result[i][0].gap_num
+        for res in range(len(result)):
+            # print(result[0][0].__dict__)
+            if counter < 30:
+                accession = result[res].accession
+                description = result[res].description
+                id_ = result[res][0].query_id
+                bitscore = result[res][0].bitscore
+                evalue = result[res][0].evalue
+                ident_num = result[res][0].ident_num
+                pos_num = result[res][0].pos_num
+                gap_num = result[res][0].gap_num
+                hit_range = [result[res][0].hit_range]
+                align_len = result[res][0].hit_span
+                ident_perc = round(ident_num / align_len * 100, 2)
+                query_cov = round(
+                    ([hit[1] - hit[0] for hit in hit_range][0]) / 301 * 100, 2)
                 result_list.append(
                     [sequence_id, accession, id_, description, bitscore,
-                     evalue, ident_num, pos_num, gap_num])
+                     evalue, ident_num, pos_num, gap_num, ident_perc,
+                     query_cov])
+
                 counter += 1
         sequence_id += 1
         counter = 0
