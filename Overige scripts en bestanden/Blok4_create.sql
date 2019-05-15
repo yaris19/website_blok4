@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2019-05-10 17:34:54.173
+-- Last modification date: 2019-05-15 07:06:42.432
 
 -- tables
 -- Table: organism
@@ -14,8 +14,7 @@ CREATE TABLE organism (
 -- Table: protein
 CREATE TABLE protein (
     name_id int NOT NULL,
-    protein_name text NULL,
-    description text NULL,
+    defenition text NULL,
     accession text NOT NULL,
     CONSTRAINT protein_pk PRIMARY KEY (name_id)
 );
@@ -31,6 +30,8 @@ CREATE TABLE protein_attribute (
     gap_num int NULL,
     e_value varchar(20) NULL,
     bit_score float NULL,
+    ident_perc float NULL,
+    query_cov float NULL,
     CONSTRAINT protein_attribute_pk PRIMARY KEY (protein_id)
 );
 
