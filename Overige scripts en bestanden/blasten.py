@@ -145,7 +145,6 @@ def read_xml_file(file_name, first50, read1):
 
     for result in blast_results:
         for res in range(len(result)):
-            # print(result[0][0].__dict__)
             if counter < 30:
                 accession = result[res].accession
                 defenition = result[res].description
@@ -199,7 +198,6 @@ def insert_database_sequence(seq_forward, seq_reverse):
 
 
 def insert_database_protein(result_list):
-    # print(len(result_list))
     desc = r'\[(.*?)\]'
     prot = r'.*\['
     connection = mysql.connector.connect(
@@ -213,16 +211,16 @@ def insert_database_protein(result_list):
     amount_res = [amount for amount in result][0]
     counter = amount_res
 
-    for n in result_list:
-        match_prot = re.search(prot, n[3])
-        match_org = re.search(desc, n[3])
+    for result in result_list:
+        match_prot = re.search(prot, result[3])
+        match_org = re.search(desc, result[3])
         if match_prot:
             protein = match_prot.group().replace('[', '')
             cursor.execute(
                 "insert into protein(name_id, defenition, "
                 "accession) values ('{}', '{}', '{}')".format(counter + 1,
                                                               protein,
-                                                              n[1]))
+                                                              result[1]))
 
             if match_org:
                 organism = match_org.group().replace('[', '').replace(']',
@@ -234,49 +232,24 @@ def insert_database_protein(result_list):
                                                              organism,
                                                              None, None))
             cursor.execute(
-                "insert into protein_attribute(protein_id, seq_id, organism_id, "
-                "name_id, ident_num, pos_num, gap_num, e_value, bit_score, "
-                "ident_perc, query_cov) values ('{}', '{}', '{}', '{}', '{}', "
-                "'{}', '{}', '{}', '{}', '{}', '{}')".format(counter + 1,
-                                                             n[0],
-                                                             counter + 1,
-                                                             counter + 1,
-                                                             n[6], n[7],
-                                                             n[8],
-                                                             n[5], n[4],
-                                                             n[9],
-                                                             n[10]))
+                "insert into protein_attribute(protein_id, seq_id, "
+                "organism_id, name_id, ident_num, pos_num, gap_num, e_value, "
+                "bit_score, ident_perc, query_cov) values ('{}', '{}', '{}',"
+                " '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
+                    counter + 1,
+                    result[0],
+                    counter + 1,
+                    counter + 1,
+                    result[6],
+                    result[7],
+                    result[8],
+                    result[5],
+                    result[4],
+                    result[9],
+                    result[10]))
+
         connection.commit()
         counter += 1
-
-    # counter = amount_res
-    # for k in result_list:
-    #     match_org = re.search(desc, k[3])
-    #     if match_org:
-    #         organism = match_org.group().replace('[', '').replace(']', '')
-    #         cursor.execute(
-    #             "insert into organism(organism_id, organism_species, "
-    #             "organism_genus, organism_family)"
-    #             "values ('{}', '{}', '{}', '{}')".format(counter + 1, organism,
-    #                                                      None, None))
-    #     counter += 1
-    # connection.commit()
-    #
-    # counter = amount_res
-    # for l in result_list:
-    #     cursor.execute(
-    #         "insert into protein_attribute(protein_id, seq_id, organism_id, "
-    #         "name_id, ident_num, pos_num, gap_num, e_value, bit_score, "
-    #         "ident_perc, query_cov) values ('{}', '{}', '{}', '{}', '{}', "
-    #         "'{}', '{}', '{}', '{}', '{}', '{}')".format(counter + 1, l[0],
-    #                                                      counter + 1,
-    #                                                      counter + 1, l[6],
-    #                                                      l[7], l[8], l[5],
-    #                                                      l[4], l[9], l[10]))
-    #
-    #     counter += 1
-    #
-    # connection.commit()
     connection.close()
 
 
