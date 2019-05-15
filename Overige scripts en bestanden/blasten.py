@@ -37,11 +37,16 @@ def main():
 
 
 def read_file():
-    # get amount of sequences
+    """
+    Reading the CSV file and doing multiple things:
+    1. Formatting FASTQ scores to decimal scores
+    2. Creating fasta files with the sequences from read 1
+    and read 2. Each fasta file contains 50 sequences
+    :return: List with headers, sequences and decimal scores
+    """
     excel_file = open('data_groep7.csv', 'r')
-    length_file = 0
-    for length in excel_file:
-        length_file += 1
+    # get amount of sequences
+    length_file = len(excel_file.readlines())
     excel_file.close()
 
     excel_file = open('data_groep7.csv', 'r')
@@ -51,6 +56,9 @@ def read_file():
     score_reverse = 0
     counter_forward = 1
     counter_reverse = length_file + 1
+
+    # formatting FASTQ scores to decimal scores
+    # using ASCII codes, and substractig 33
     for lines in excel_file:
         line = lines.split('\t')
         for score_for in line[2]:
@@ -63,11 +71,16 @@ def read_file():
         seq_reverse.append(
             [line[3], line[4], round(score_reverse / len(line[5]),
                                      2), counter_reverse])
+
+        # resetting values, so it can be calculated again
+        # in the next iteration
         counter_forward += 1
         counter_reverse += 1
         score_reverse = 0
         score_forward = 0
 
+    # writing new fasta files with the read 1 sequences
+    # each fasta file contains 50 sequences
     file_forward_first = open('read1_sequences_first50.fasta', 'w')
     file_forward_last = open('read1_sequences_last50.fasta', 'w')
     seq_count_forward = 0
@@ -82,6 +95,8 @@ def read_file():
     file_forward_first.close()
     file_forward_last.close()
 
+    # writing new fasta files with the read 2 sequences
+    # each fasta file contains 50 sequences
     file_reverse_first = open('read2_sequences_first50.fasta', 'w')
     file_reverse_last = open('read2_sequences_last50.fasta', 'w')
     seq_count_reverse = 0
@@ -100,6 +115,12 @@ def read_file():
 
 
 def blastx(input_file_name, output_file_name):
+    """
+    Blasting the fasta files
+    :param input_file_name: name of the fasta file
+    :param output_file_name:  name of the XML file that will be created
+    :return: an XML file with the BLAST output
+    """
     print('started at', datetime.now())
     file = open(input_file_name, 'r').read()
     result_handle = NCBIWWW.qblast('blastx', 'nr', file,
@@ -128,12 +149,26 @@ def replace(input_file, output_file):
 
 
 def read_xml_file(file_name, first50, read1):
+    """
+    Parsing the XML file, and getting values. And calculating values
+    based on the values in the XML file
+    :param file_name: Name of fasta file that should be used
+    :param first50: boolean, True if the fasta file contains the first 50 sequences,
+    False if the file contains the last 50 sequences
+    :param read1: boolean, True if the fasta file contains the read 1 sequnces,
+    False if the file contains the read 2 sequences
+    :return: a list with all the results from the XML file
+    """
     warnings.simplefilter('ignore', BiopythonWarning)
     blast_results = SearchIO.parse(file_name, 'blast-xml')
     result_list = []
     counter = 0
 
+    # amout of hits that should be saved into the database
+    saving_hits = 30
+
     sequence_id = 0
+
     if first50 and read1:
         sequence_id = 1
     elif not first50 and read1:
@@ -145,7 +180,7 @@ def read_xml_file(file_name, first50, read1):
 
     for result in blast_results:
         for res in range(len(result)):
-            if counter < 30:
+            if counter < saving_hits:
                 accession = result[res].accession
                 defenition = result[res].description
                 id_ = result[res][0].query_id
@@ -171,6 +206,11 @@ def read_xml_file(file_name, first50, read1):
 
 
 def insert_database_sequence(seq_forward, seq_reverse):
+    """
+    Inserting the header, sequence and score into the database
+    :param seq_forward: list with the headers, sequences and scores of read 1
+    :param seq_reverse: list with the headers, sequences and scores of read 2
+    """
     connection = mysql.connector.connect(
         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
         user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
@@ -198,37 +238,46 @@ def insert_database_sequence(seq_forward, seq_reverse):
 
 
 def insert_database_protein(result_list):
-    desc = r'\[(.*?)\]'
-    prot = r'.*\['
+    """
+    Inserting all the results into the database
+    :param result_list: List with all the results
+    """
+    # name of protein is between brackets [ ]
+    prot = r'\[(.*?)\]'
+
+    # defenition of protein is untill opening bracket [
+    defenition = r'.*\['
+
     connection = mysql.connector.connect(
         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
         user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
         database='fifkv',
         password='613633')
     cursor = connection.cursor()
+
+    # getting current length of database
     cursor.execute("select count(*) from protein")
     result = cursor.fetchone()
     amount_res = [amount for amount in result][0]
-    counter = amount_res
+    counter = amount_res + 1
 
     for result in result_list:
+        match_def = re.search(defenition, result[3])
         match_prot = re.search(prot, result[3])
-        match_org = re.search(desc, result[3])
-        if match_prot:
-            protein = match_prot.group().replace('[', '')
+        if match_def:
+            protein = match_def.group().replace('[', '')
             cursor.execute(
                 "insert into protein(name_id, defenition, "
-                "accession) values ('{}', '{}', '{}')".format(counter + 1,
+                "accession) values ('{}', '{}', '{}')".format(counter,
                                                               protein,
                                                               result[1]))
 
-            if match_org:
-                organism = match_org.group().replace('[', '').replace(']',
-                                                                      '')
+            if match_prot:
+                organism = match_prot.group().replace('[', '').replace(']', '')
                 cursor.execute(
                     "insert into organism(organism_id, organism_species, "
                     "organism_genus, organism_family)"
-                    "values ('{}', '{}', '{}', '{}')".format(counter + 1,
+                    "values ('{}', '{}', '{}', '{}')".format(counter,
                                                              organism,
                                                              None, None))
             cursor.execute(
@@ -236,10 +285,10 @@ def insert_database_protein(result_list):
                 "organism_id, name_id, ident_num, pos_num, gap_num, e_value, "
                 "bit_score, ident_perc, query_cov) values ('{}', '{}', '{}',"
                 " '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
-                    counter + 1,
+                    counter,
                     result[0],
-                    counter + 1,
-                    counter + 1,
+                    counter,
+                    counter,
                     result[6],
                     result[7],
                     result[8],
@@ -253,4 +302,4 @@ def insert_database_protein(result_list):
     connection.close()
 
 
-main()
+# main()
