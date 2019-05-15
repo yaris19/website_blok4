@@ -4,6 +4,7 @@
 # https://www.biostars.org/p/95101/
 # http://biopython.org/DIST/docs/tutorial/Tutorial.html
 # https://www.biostars.org/p/180510/
+# https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html
 
 from Bio.Blast import NCBIWWW
 from Bio import SearchIO
@@ -12,14 +13,27 @@ from Bio.SeqRecord import SeqRecord
 import warnings
 from Bio import BiopythonWarning
 from datetime import datetime
+import re
+import mysql.connector
 
 
 def main():
+    print(datetime.now())
     seq_forward, seq_reverse = read_file()
-    result_list1 = read_xml_file('read1_first50.xml', True, True)
-    result_list2 = read_xml_file('read1_last50.xml', False, True)
-    result_list3 = read_xml_file('read2_first50.xml', True, False)
-    result_list4 = read_xml_file('read2_last50.xml', False, False)
+    insert_database_sequence(seq_forward, seq_reverse)
+    replace('read1_first50.xml', 'read1_first50_adjusted.xml')
+    replace('read1_last50.xml', 'read1_last50_adjusted.xml')
+    replace('read2_first50.xml', 'read2_first50_adjusted.xml')
+    replace('read2_last50.xml', 'read2_last50_adjusted.xml')
+    result_list1 = read_xml_file('read1_first50_adjusted.xml', True, True)
+    result_list2 = read_xml_file('read1_last50_adjusted.xml', False, True)
+    result_list3 = read_xml_file('read2_first50_adjusted.xml', True, False)
+    result_list4 = read_xml_file('read2_last50_adjusted.xml', False, False)
+    insert_database_protein(result_list1)
+    insert_database_protein(result_list2)
+    insert_database_protein(result_list3)
+    insert_database_protein(result_list4)
+    print(datetime.now())
 
 
 def read_file():
@@ -44,11 +58,11 @@ def read_file():
         for score_rev in line[5]:
             score_reverse += ord(score_rev) - 33
         seq_forward.append(
-            [line[0], line[1], round(score_forward / len(line[2])
-                                     , 2), counter_forward])
+            [line[0], line[1], round(score_forward / len(line[2]),
+                                     2), counter_forward])
         seq_reverse.append(
-            [line[3], line[4], round(score_reverse / len(line[5])
-                                     , 2), counter_reverse])
+            [line[3], line[4], round(score_reverse / len(line[5]),
+                                     2), counter_reverse])
         counter_forward += 1
         counter_reverse += 1
         score_reverse = 0
@@ -97,6 +111,22 @@ def blastx(input_file_name, output_file_name):
     print('finished at ', datetime.now())
 
 
+def replace(input_file, output_file):
+    file = open(input_file)
+    for line in file:
+        match_ap = re.search('&apos;', line)
+        match_gt = re.search('&gt;', line)
+        match = re.search('&apos;-', line)
+        if match:
+            line = line.replace(match.group(), ' ')
+        if match_ap:
+            line = line.replace(match_ap.group(), ' ')
+        if match_gt:
+            line = line.replace(match_gt.group(), '>')
+        fil = open(output_file, 'a')
+        fil.write(line)
+
+
 def read_xml_file(file_name, first50, read1):
     warnings.simplefilter('ignore', BiopythonWarning)
     blast_results = SearchIO.parse(file_name, 'blast-xml')
@@ -118,7 +148,7 @@ def read_xml_file(file_name, first50, read1):
             # print(result[0][0].__dict__)
             if counter < 30:
                 accession = result[res].accession
-                description = result[res].description
+                defenition = result[res].description
                 id_ = result[res][0].query_id
                 bitscore = result[res][0].bitscore
                 evalue = result[res][0].evalue
@@ -128,10 +158,10 @@ def read_xml_file(file_name, first50, read1):
                 hit_range = [result[res][0].hit_range]
                 align_len = result[res][0].hit_span
                 ident_perc = round(ident_num / align_len * 100, 2)
-                query_cov = round(
-                    ([hit[1] - hit[0] for hit in hit_range][0]) / 301 * 100, 2)
+                query_cov = round(([hit[1] - hit[0] for hit in hit_range][0])
+                                  / 301 * 100, 2)
                 result_list.append(
-                    [sequence_id, accession, id_, description, bitscore,
+                    [sequence_id, accession, id_, defenition, bitscore,
                      evalue, ident_num, pos_num, gap_num, ident_perc,
                      query_cov])
 
@@ -139,6 +169,115 @@ def read_xml_file(file_name, first50, read1):
         sequence_id += 1
         counter = 0
     return result_list
+
+
+def insert_database_sequence(seq_forward, seq_reverse):
+    connection = mysql.connector.connect(
+        host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
+        user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
+        database='fifkv',
+        password='613633')
+    cursor = connection.cursor()
+    for seq_for in seq_forward:
+        cursor.execute(
+            "insert into sequence(seq_id, sequence, header, score)"
+            " values ('{}', '{}', '{}', '{}')".format(seq_for[3],
+                                                      seq_for[1],
+                                                      seq_for[0],
+                                                      seq_for[2]))
+    connection.commit()
+
+    for seq_rev in seq_reverse:
+        cursor.execute(
+            "insert into sequence(seq_id, sequence, header, score)"
+            " values ('{}', '{}', '{}', '{}')".format(seq_rev[3],
+                                                      seq_rev[1],
+                                                      seq_rev[0],
+                                                      seq_rev[2]))
+    connection.commit()
+    connection.close()
+
+
+def insert_database_protein(result_list):
+    # print(len(result_list))
+    desc = r'\[(.*?)\]'
+    prot = r'.*\['
+    connection = mysql.connector.connect(
+        host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
+        user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
+        database='fifkv',
+        password='613633')
+    cursor = connection.cursor()
+    cursor.execute("select count(*) from protein")
+    result = cursor.fetchone()
+    amount_res = [amount for amount in result][0]
+    counter = amount_res
+
+    for n in result_list:
+        match_prot = re.search(prot, n[3])
+        match_org = re.search(desc, n[3])
+        if match_prot:
+            protein = match_prot.group().replace('[', '')
+            cursor.execute(
+                "insert into protein(name_id, defenition, "
+                "accession) values ('{}', '{}', '{}')".format(counter + 1,
+                                                              protein,
+                                                              n[1]))
+
+            if match_org:
+                organism = match_org.group().replace('[', '').replace(']',
+                                                                      '')
+                cursor.execute(
+                    "insert into organism(organism_id, organism_species, "
+                    "organism_genus, organism_family)"
+                    "values ('{}', '{}', '{}', '{}')".format(counter + 1,
+                                                             organism,
+                                                             None, None))
+            cursor.execute(
+                "insert into protein_attribute(protein_id, seq_id, organism_id, "
+                "name_id, ident_num, pos_num, gap_num, e_value, bit_score, "
+                "ident_perc, query_cov) values ('{}', '{}', '{}', '{}', '{}', "
+                "'{}', '{}', '{}', '{}', '{}', '{}')".format(counter + 1,
+                                                             n[0],
+                                                             counter + 1,
+                                                             counter + 1,
+                                                             n[6], n[7],
+                                                             n[8],
+                                                             n[5], n[4],
+                                                             n[9],
+                                                             n[10]))
+        connection.commit()
+        counter += 1
+
+    # counter = amount_res
+    # for k in result_list:
+    #     match_org = re.search(desc, k[3])
+    #     if match_org:
+    #         organism = match_org.group().replace('[', '').replace(']', '')
+    #         cursor.execute(
+    #             "insert into organism(organism_id, organism_species, "
+    #             "organism_genus, organism_family)"
+    #             "values ('{}', '{}', '{}', '{}')".format(counter + 1, organism,
+    #                                                      None, None))
+    #     counter += 1
+    # connection.commit()
+    #
+    # counter = amount_res
+    # for l in result_list:
+    #     cursor.execute(
+    #         "insert into protein_attribute(protein_id, seq_id, organism_id, "
+    #         "name_id, ident_num, pos_num, gap_num, e_value, bit_score, "
+    #         "ident_perc, query_cov) values ('{}', '{}', '{}', '{}', '{}', "
+    #         "'{}', '{}', '{}', '{}', '{}', '{}')".format(counter + 1, l[0],
+    #                                                      counter + 1,
+    #                                                      counter + 1, l[6],
+    #                                                      l[7], l[8], l[5],
+    #                                                      l[4], l[9], l[10]))
+    #
+    #     counter += 1
+    #
+    # connection.commit()
+    connection.close()
 
 
 main()
