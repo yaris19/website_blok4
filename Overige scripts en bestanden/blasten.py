@@ -277,9 +277,8 @@ def insert_database_protein(result_list):
                 cursor.execute(
                     "insert into organism(organism_id, organism_species, "
                     "organism_genus, organism_family)"
-                    "values ('{}', '{}', '{}', '{}')".format(counter,
-                                                             organism,
-                                                             None, None))
+                    "values ('{}', '{}', null, null)".format(counter,
+                                                             organism))
             cursor.execute(
                 "insert into protein_attribute(protein_id, seq_id, "
                 "organism_id, name_id, ident_num, pos_num, gap_num, e_value, "
@@ -302,4 +301,4 @@ def insert_database_protein(result_list):
     connection.close()
 
 
-# main()
+main()
