@@ -8,8 +8,10 @@
 
 from Bio.Blast import NCBIWWW
 from Bio import SearchIO
+from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+from Bio import Entrez
 import warnings
 from Bio import BiopythonWarning
 from datetime import datetime
@@ -284,21 +286,42 @@ def insert_database_protein(result_list):
                 "organism_id, name_id, ident_num, pos_num, gap_num, e_value, "
                 "bit_score, ident_perc, query_cov) values ('{}', '{}', '{}',"
                 " '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
-                    counter,
-                    result[0],
-                    counter,
-                    counter,
-                    result[6],
-                    result[7],
-                    result[8],
-                    result[5],
-                    result[4],
-                    result[9],
-                    result[10]))
+                    counter, result[0], counter, counter, result[6], result[7],
+                    result[8], result[5], result[4], result[9], result[10]))
 
         connection.commit()
         counter += 1
     connection.close()
 
 
-main()
+def update_database_genus_family():
+    print(datetime.now())
+    Entrez.email = 'yarisvanthiel@gmail.com'
+    connection = mysql.connector.connect(
+        host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
+        user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
+        database='fifkv',
+        password='613633')
+    cursor = connection.cursor()
+    cursor.execute("select name_id, accession from protein")
+    accession_codes = cursor.fetchall()
+    for code in accession_codes:
+        handle = Entrez.efetch(db='nucleotide', id=code[1], rettype='gb',
+                               retmode='text')
+        output_handle = SeqIO.read(handle, 'genbank')
+        try:
+            cursor.execute("update organism set organism_family ='{}', "
+                           "organism_genus = '{}' where organism_id = '{}'"
+                           "".format(output_handle.annotations['taxonomy'][-2],
+                                     output_handle.annotations['taxonomy'][-1],
+                                     code[0]))
+        except IndexError:
+            cursor.execute(("update organism set organism_family = null, "
+                            "organism_genus = null where organism_id = "
+                            "{}".format(code[0])))
+        connection.commit()
+    connection.close()
+    print(datetime.now())
+
+
+update_database_genus_family()
