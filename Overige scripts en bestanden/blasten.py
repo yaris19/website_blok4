@@ -12,30 +12,43 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio import Entrez
+import re
+import mysql.connector
 import warnings
 from Bio import BiopythonWarning
 from datetime import datetime
-import re
-import mysql.connector
 
 
 def main():
     print(datetime.now())
-    seq_forward, seq_reverse = read_file()
-    insert_database_sequence(seq_forward, seq_reverse)
-    replace('read1_first50.xml', 'read1_first50_adjusted.xml')
-    replace('read1_last50.xml', 'read1_last50_adjusted.xml')
-    replace('read2_first50.xml', 'read2_first50_adjusted.xml')
-    replace('read2_last50.xml', 'read2_last50_adjusted.xml')
-    result_list1 = read_xml_file('read1_first50_adjusted.xml', True, True)
-    result_list2 = read_xml_file('read1_last50_adjusted.xml', False, True)
-    result_list3 = read_xml_file('read2_first50_adjusted.xml', True, False)
-    result_list4 = read_xml_file('read2_last50_adjusted.xml', False, False)
+    # seq_forward, seq_reverse = read_file()
+    # blastx('read1_sequences_first50.fasta', 'read1_first50.xml')
+    # blastx('read1_sequences_last50.fasta', 'read1_last50.xml')
+    # blastx('read2_sequences_first50.fasta', 'read2_first50.xml')
+    # blastx('read2_sequences_last50.fasta', 'read2_last50.xml')
+    # insert_database_sequence(seq_forward, seq_reverse)
+    result_list1 = read_xml_file('read1_first50.xml', True, True)
+    result_list2 = read_xml_file('read1_last50.xml', False, True)
+    result_list3 = read_xml_file('read2_first50.xml', True, False)
+    result_list4 = read_xml_file('read2_last50.xml', False, False)
     insert_database_protein(result_list1)
     insert_database_protein(result_list2)
     insert_database_protein(result_list3)
     insert_database_protein(result_list4)
     print(datetime.now())
+
+
+def connection_database():
+    """
+    Make connection to the database
+    :return: The connection
+    """
+    connection = mysql.connector.connect(
+        host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
+        user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
+        database='fifkv',
+        password='613633')
+    return connection
 
 
 def read_file():
@@ -59,8 +72,8 @@ def read_file():
     counter_forward = 1
     counter_reverse = length_file + 1
 
-    # formatting FASTQ scores to decimal scores
-    # using ASCII codes, and substractig 33
+    # formatting FASTQ scores to decimal scores using ASCII codes
+    # and substracting 33
     for lines in excel_file:
         line = lines.split('\t')
         for score_for in line[2]:
@@ -74,8 +87,7 @@ def read_file():
             [line[3], line[4], round(score_reverse / len(line[5]),
                                      2), counter_reverse])
 
-        # resetting values, so it can be calculated again
-        # in the next iteration
+        # resetting values, so it can be calculated again in the next iteration
         counter_forward += 1
         counter_reverse += 1
         score_reverse = 0
@@ -90,7 +102,7 @@ def read_file():
         if seq_count_forward < 50:
             record = SeqRecord(Seq(seq[1]), id=seq[0], description='')
             file_forward_first.write(record.format('fasta'))
-        else:
+        elif seq_count_forward < 100:
             record = SeqRecord(Seq(seq[1]), id=seq[0], description='')
             file_forward_last.write(record.format('fasta'))
         seq_count_forward += 1
@@ -106,13 +118,14 @@ def read_file():
         if seq_count_reverse < 50:
             record = SeqRecord(Seq(seq[1]), id=seq[0], description='')
             file_reverse_first.write(record.format('fasta'))
-        else:
+        elif seq_count_reverse < 100:
             record = SeqRecord(Seq(seq[1]), id=seq[0], description='')
             file_reverse_last.write(record.format('fasta'))
         seq_count_reverse += 1
 
     file_reverse_first.close()
     file_reverse_last.close()
+
     return seq_forward, seq_reverse
 
 
@@ -129,25 +142,10 @@ def blastx(input_file_name, output_file_name):
                                    word_size=6, gapcosts='11 1',
                                    expect=0.0001, format_type='XML')
     out_handle = open(output_file_name, 'w')
-    out_handle.write(result_handle.read())
+    handle = result_handle.read().replace('&apos;', '').replace('&gt;', '>')
+    out_handle.write(handle)
     out_handle.close()
     print('finished at ', datetime.now())
-
-
-def replace(input_file, output_file):
-    file = open(input_file)
-    for line in file:
-        match_ap = re.search('&apos;', line)
-        match_gt = re.search('&gt;', line)
-        match = re.search('&apos;-', line)
-        if match:
-            line = line.replace(match.group(), ' ')
-        if match_ap:
-            line = line.replace(match_ap.group(), ' ')
-        if match_gt:
-            line = line.replace(match_gt.group(), '>')
-        fil = open(output_file, 'a')
-        fil.write(line)
 
 
 def read_xml_file(file_name, first50, read1):
@@ -155,8 +153,8 @@ def read_xml_file(file_name, first50, read1):
     Parsing the XML file, and getting values. And calculating values
     based on the values in the XML file
     :param file_name: Name of fasta file that should be used
-    :param first50: boolean, True if the fasta file contains the first 50 sequences,
-    False if the file contains the last 50 sequences
+    :param first50: boolean, True if the fasta file contains the first 50
+    sequences, False if the file contains the last 50 sequences
     :param read1: boolean, True if the fasta file contains the read 1 sequnces,
     False if the file contains the read 2 sequences
     :return: a list with all the results from the XML file
@@ -165,11 +163,10 @@ def read_xml_file(file_name, first50, read1):
     blast_results = SearchIO.parse(file_name, 'blast-xml')
     result_list = []
     counter = 0
+    sequence_id = 0
 
     # amout of hits that should be saved into the database
     saving_hits = 30
-
-    sequence_id = 0
 
     if first50 and read1:
         sequence_id = 1
@@ -213,28 +210,22 @@ def insert_database_sequence(seq_forward, seq_reverse):
     :param seq_forward: list with the headers, sequences and scores of read 1
     :param seq_reverse: list with the headers, sequences and scores of read 2
     """
-    connection = mysql.connector.connect(
-        host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
-        user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
-        database='fifkv',
-        password='613633')
+
+    connection = connection_database()
     cursor = connection.cursor()
+
     for seq_for in seq_forward:
         cursor.execute(
             "insert into sequence(seq_id, sequence, header, score)"
-            " values ('{}', '{}', '{}', '{}')".format(seq_for[3],
-                                                      seq_for[1],
-                                                      seq_for[0],
-                                                      seq_for[2]))
+            " values ('{}', '{}', '{}', '{}')".format(seq_for[3], seq_for[1],
+                                                      seq_for[0], seq_for[2]))
     connection.commit()
 
     for seq_rev in seq_reverse:
         cursor.execute(
             "insert into sequence(seq_id, sequence, header, score)"
-            " values ('{}', '{}', '{}', '{}')".format(seq_rev[3],
-                                                      seq_rev[1],
-                                                      seq_rev[0],
-                                                      seq_rev[2]))
+            " values ('{}', '{}', '{}', '{}')".format(seq_rev[3], seq_rev[1],
+                                                      seq_rev[0], seq_rev[2]))
     connection.commit()
     connection.close()
 
@@ -243,6 +234,7 @@ def insert_database_protein(result_list):
     """
     Inserting all the results into the database
     :param result_list: List with all the results
+    :return: An updated database
     """
     # name of protein is between brackets [ ]
     prot = r'\[(.*?)\]'
@@ -250,11 +242,7 @@ def insert_database_protein(result_list):
     # defenition of protein is untill opening bracket [
     defenition = r'.*\['
 
-    connection = mysql.connector.connect(
-        host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
-        user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
-        database='fifkv',
-        password='613633')
+    connection = connection_database()
     cursor = connection.cursor()
 
     # getting current length of database
@@ -276,11 +264,21 @@ def insert_database_protein(result_list):
 
             if match_prot:
                 organism = match_prot.group().replace('[', '').replace(']', '')
-                cursor.execute(
-                    "insert into organism(organism_id, organism_species, "
-                    "organism_genus, organism_family)"
-                    "values ('{}', '{}', null, null)".format(counter,
-                                                             organism))
+                if result[11] == '' and result[12] == '':
+                    cursor.execute(
+                        "insert into organism(organism_id, organism_species, "
+                        "organism_genus, organism_family)"
+                        "values ('{}', '{}', null, null)".format(counter,
+                                                                 organism))
+                else:
+                    cursor.execute(
+                        "insert into organism(organism_id, organism_species, "
+                        "organism_genus, organism_family)"
+                        "values ('{}', '{}', '{}', '{}')".format(counter,
+                                                                 organism,
+                                                                 result[11],
+                                                                 result[12]))
+
             cursor.execute(
                 "insert into protein_attribute(protein_id, seq_id, "
                 "organism_id, name_id, ident_num, pos_num, gap_num, e_value, "
@@ -294,15 +292,15 @@ def insert_database_protein(result_list):
     connection.close()
 
 
-def update_database_genus_family():
-    print(datetime.now())
+def get_genus_family():
+    """
+    Update the organism table with genus and family
+    :return: An updated database
+    """
     Entrez.email = 'yarisvanthiel@gmail.com'
-    connection = mysql.connector.connect(
-        host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
-        user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
-        database='fifkv',
-        password='613633')
+    connection = connection_database()
     cursor = connection.cursor()
+
     cursor.execute("select name_id, accession from protein")
     accession_codes = cursor.fetchall()
     for code in accession_codes:
@@ -317,11 +315,10 @@ def update_database_genus_family():
                                      code[0]))
         except IndexError:
             cursor.execute(("update organism set organism_family = null, "
-                            "organism_genus = null where organism_id = "
-                            "{}".format(code[0])))
+                            "organism_genus = null where organism_id = '{}'"
+                            "".format(code[0])))
         connection.commit()
     connection.close()
-    print(datetime.now())
 
 
-update_database_genus_family()
+main()
