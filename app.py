@@ -68,17 +68,20 @@ def site():
 
     if not show_values:
         # return empty html file when site is loaded for first time
-        return render_template('index.html', rows='', show_values='',
+        return render_template('website.html', rows='', show_values='',
                                values=values, count='')
     else:
         # run query in database
         cursor.execute(query)
         rows = cursor.fetchall()
         # return html file with all the variables
-        return render_template('index.html', rows=rows,
+        return render_template('website.html', rows=rows,
                                show_values=show_values,
                                values=values, count=count)
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    return render_template('website.html')
 
 if __name__ == '__main__':
     app.run()
