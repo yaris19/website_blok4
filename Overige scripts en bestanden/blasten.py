@@ -27,14 +27,15 @@ def main():
     # blastx('read2_sequences_first50.fasta', 'read2_first50.xml')
     # blastx('read2_sequences_last50.fasta', 'read2_last50.xml')
     # insert_database_sequence(seq_forward, seq_reverse)
-    result_list1 = read_xml_file('read1_first50.xml', True, True)
-    result_list2 = read_xml_file('read1_last50.xml', False, True)
-    result_list3 = read_xml_file('read2_first50.xml', True, False)
+    # result_list1 = read_xml_file('read1_first50.xml', True, True)
+    # result_list2 = read_xml_file('read1_last50.xml', False, True)
+    # result_list3 = read_xml_file('read2_first50.xml', True, False)
     result_list4 = read_xml_file('read2_last50.xml', False, False)
-    insert_database_protein(result_list1)
-    insert_database_protein(result_list2)
-    insert_database_protein(result_list3)
-    insert_database_protein(result_list4)
+    update_query_cover(result_list4)
+    # insert_database_protein(result_list1)
+    # insert_database_protein(result_list2)
+    # insert_database_protein(result_list3)
+    # insert_database_protein(result_list4)
     print(datetime.now())
 
 
@@ -188,11 +189,11 @@ def read_xml_file(file_name, first50, read1):
                 ident_num = result[res][0].ident_num
                 pos_num = result[res][0].pos_num
                 gap_num = result[res][0].gap_num
-                hit_range = [result[res][0].hit_range]
+                query_range = [result[res][0].query_range]
                 align_len = result[res][0].hit_span
                 ident_perc = round(ident_num / align_len * 100, 2)
-                query_cov = round(([hit[1] - hit[0] for hit in hit_range][0])
-                                  / 301 * 100, 2)
+                query_cov = round(([query[1] - query[0] for query in
+                                    query_range][0]) / 301 * 100, 2)
                 result_list.append(
                     [sequence_id, accession, id_, defenition, bitscore,
                      evalue, ident_num, pos_num, gap_num, ident_perc,
@@ -318,6 +319,26 @@ def get_genus_family():
                             "organism_genus = null where organism_id = '{}'"
                             "".format(code[0])))
         connection.commit()
+    connection.close()
+
+
+def update_query_cover(result_list):
+    """
+    Updates the database with the right query coverage. The query coverage was
+     wrongly calculated in the function read_xml_file. Which has been changed.
+     The variable counter should be changes manually.
+    :param result_list: The result list
+    :return:
+    """
+    connection = connection_database()
+    cursor = connection.cursor()
+    counter = 3489
+    for result in result_list:
+        cursor.execute("update (protein_attribute) set query_cov = '{}' where "
+                       "protein_id = '{}'".format(result[10], counter))
+        connection.commit()
+        counter += 1
+        # print(result[10])
     connection.close()
 
 
