@@ -35,7 +35,8 @@ def site():
     # set search to input from user
     if name == 'protein':
         search = " where defenition like '%" + request.form.get(
-            'description') + "%'"
+            'description') + "%' or accession like '%" + \
+                 request.form.get('description') + "%'"
     elif name == 'organism':
         search = " where organism_species like '%" + request.form.get(
             'description') + "%' or organism_genus like '%" + request.form.get(
