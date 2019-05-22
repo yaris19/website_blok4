@@ -4,7 +4,12 @@ import mysql.connector
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
+def home():
+    return render_template('website.html')
+
+
+@app.route('/database.html', methods=['GET', 'POST'])
 def site():
     # make a connection with the database
     connection = mysql.connector.connect(
@@ -68,20 +73,17 @@ def site():
 
     if not show_values:
         # return empty html file when site is loaded for first time
-        return render_template('website.html', rows='', show_values='',
+        return render_template('database.html', rows='', show_values='',
                                values=values, count='')
     else:
         # run query in database
         cursor.execute(query)
         rows = cursor.fetchall()
         # return html file with all the variables
-        return render_template('website.html', rows=rows,
+        return render_template('database.html', rows=rows,
                                show_values=show_values,
                                values=values, count=count)
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    return render_template('website.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
