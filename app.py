@@ -18,72 +18,96 @@ def site():
         database='fifkv',
         password='613633')
     cursor = connection.cursor()
-    values = ['Header', 'Sequence', 'Accession', 'Defenition',
-              'Organism_species', 'Organism_genus', 'Organism_family',
-              'Ident_perc', 'Query_cov', 'E_value']
+    values_1 = ['Header', 'Defenition', 'Organism_species', 'Ident_perc',
+                'Accession']
+    values_2 = ['Sequence', 'Organism_genus', 'Organism_family', 'Query_cov',
+                'E_value', ]
 
     # set default limit to 10
     limit = '10'
-    if request.form.get('limit', False):
+    if request.args.get('limit', False):
         # set limit to input from user
-        limit = request.form.get('limit')
+        limit = request.args.get('limit')
 
     # set search to empty
     search = ''
 
-    name = request.form.get('select', False)
+    name = request.args.get('select', False)
     # set search to input from user
     if name == 'protein':
-        search = " where defenition like '%" + request.form.get(
+        search = " where defenition like '%" + request.args.get(
             'description') + "%' or accession like '%" + \
-                 request.form.get('description') + "%'"
+                 request.args.get('description') + "%' "
     elif name == 'organism':
-        search = " where organism_species like '%" + request.form.get(
-            'description') + "%' or organism_genus like '%" + request.form.get(
-            'description') + "%' or organism_family like '%" + request.form.get(
-            'description') + "%'"
+        search = " where organism_species like '%" + request.args.get(
+            'description') + "%' or organism_genus like '%" + request.args.get(
+            'description') + "%' or organism_family like '%" + request.args.get(
+            'description') + "%' "
 
     # new list with the values that should be shown in the table
     show_values = []
-    for value in values:
-        if value in request.form:
+    for value_1, value_2 in zip(values_1, values_2):
+        if value_1 in request.args:
             # append the values that user selected to new list
-            show_values.append(value)
+            show_values.append(value_1)
+        if value_2 in request.args:
+            show_values.append(value_2)
     # seperate the values with a comma
+    print(show_values)
     select = ','.join(show_values)
 
     # get choice from user
-    choice = request.form.get('choice', False)
+    choice = request.args.get('choice', False)
     # default choice is a regular select statement, so count statement is false
     count = False
     query = "select " + select + " from protein p join protein_attribute" \
                                  " pa on p.name_id = pa.name_id join " \
                                  "organism o on pa.organism_id = " \
                                  "o.organism_id join sequence s on pa.seq_id" \
-                                 " = s.seq_id" + search + " limit " + limit
+                                 " = s.seq_id" + search + "limit " + limit
 
     if choice == 'count':
+        search = " where " + select + " like '%" + request.args.get(
+            'description') + "%' "
         query = "select " + select + ",count(*) from protein p join protein_" \
                                      "attribute pa on p.name_id = pa.name_id" \
                                      " join organism o on pa.organism_id = " \
                                      "o.organism_id join sequence s on " \
-                                     "pa.seq_id  = s.seq_id group by " + \
-                select + " order by count(*) desc"
+                                     "pa.seq_id  = s.seq_id" + search + \
+                "group by " + select + " order by count(*) desc"
         # user chose count, so count statement is true
         count = True
 
     if not show_values:
+        # query = "select header, sequence, score from sequence"
+        # cursor.execute(query)
+        # rows = cursor.fetchall()
         # return empty html file when site is loaded for first time
-        return render_template('database.html', rows='', show_values='',
-                               values=values, count='')
+        return render_template('database.html', rows='',
+                               show_values=['header', 'sequence', 'score'],
+                               values_1=values_1, values_2=values_2, count='',
+                               ncbi_links='')
     else:
         # run query in database
         cursor.execute(query)
         rows = cursor.fetchall()
-        # return html file with all the variables
-        return render_template('database.html', rows=rows,
-                               show_values=show_values,
-                               values=values, count=count)
+        ncbi_links = []
+        if 'Accession' in show_values:
+            for row in rows:
+                link = 'https://www.ncbi.nlm.nih.gov/protein/' + row[-1]
+                ncbi_links.append(link)
+            rows = zip(rows, ncbi_links)
+            # return html file with all the variables
+            return render_template('database.html', rows=rows,
+                                   show_values=show_values,
+                                   count=count, values_1=values_1,
+                                   values_2=values_2, accession=True)
+        else:
+            print(rows)
+            return render_template('database.html', rows=rows,
+                                   show_values=show_values,
+                                   values_1=values_1, values_2=values_2,
+                                   count=count, accession=False)
 
 
 if __name__ == '__main__':

@@ -3,137 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <title>Blast Results</title>
-    <link rel="stylesheet" href='{{ url_for('static', filename= 'index.css')}}'>
+    <link rel="stylesheet"
+          href='{{ url_for('static', filename= 'index.css') }}'>
 </head>
 <body>
-    <div class="navbar">
-        <a href="#" class="logo">Eindopdracht</a>
-        <ul class="nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="database.html">Database</a></li>
-            <li><a href="/#About">About</a></li>
-            <li><a href="/#Sources">Sources</a></li>
-        </ul>
-    </div>
-
-    <div class= "Database-area" id="Database">
-        <div class= "text-part">
-            <h1>The Database</h1>
-            <p> Filtering out stuff.</p>
-        </div>
-    </div>
-<div>
-    <form method='post'>
-    Do you want to <select name='choice'>
-    <option value='search'>search</option>
-    <option value='count'>count</option>
-</select><br>
-    Search for something in <select name='select'>
-    <option value='protein'>protein</option>
-    <option value='organism'>organism</option>
-</select><br>
-
-
-    What to look for<input type='text' name='description'><br>
-    Limit <input type='number' name='limit'><br>
-    {% for value in values %}
-        <input type='checkbox' name={{ value }} value={{ value }}'>{{ value }}
-        <br>
-    {% endfor %}
-    <input type='submit' name='submit' value='Submit'><br><br>
-
-    {% if rows != '' %}
-        <table>
-            <tr>
-                {% if not count %}
-                    {% for show in show_values %}
-                        <th>{{ show }}</th>
-                    {% endfor %}
-                {% else %}
-                    {% for show in show_values %}
-                    <th>{{ show }}</th>
-                    <th>Amount</th>
-                    {% endfor %}
-                {% endif %}
-            </tr>
-
-            {% for row in rows %}
-                <tr>
-                    {% if not row[1] %}
-                        <td>{{ row[0] }}</td>
-                    {% elif not row[2] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                    {% elif not row[3] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                    {% elif not row[4] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                    {% elif not row[5] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                    {% elif not row[6] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                    {% elif not row[7] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                        <td>{{ row[6] }}</td>
-                    {% elif not row[8] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                        <td>{{ row[6] }}</td>
-                        <td>{{ row[7] }}</td>
-                    {% elif not row[9] %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                        <td>{{ row[6] }}</td>
-                        <td>{{ row[7] }}</td>
-                        <td>{{ row[8] }}</td>
-                    {% else %}
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                        <td>{{ row[6] }}</td>
-                        <td>{{ row[7] }}</td>
-                        <td>{{ row[8] }}</td>
-                        <td>{{ row[9] }}</td>
-                    {% endif %}
-
-                </tr>
-            {% endfor %}
-
-        </table>
-    {% endif %}
-
-</form>
+<div class="navbar">
+    <a href="#" class="logo">Eindopdracht</a>
+    <ul class="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="database.html">Database</a></li>
+        <li><a href="/#About">About</a></li>
+        <li><a href="/#Sources">Sources</a></li>
+    </ul>
 </div>
 
+<div class="Database" id="Database">
+    <div class="text-part">
+        <h1>The Database</h1>
+        <form method='get'>
+            <p>
+                Do you want to <select name='choice'>
+                <option value='search'>search</option>
+                <option value='count'>count</option>
+            </select><br>
+                Search for something in <select name='select'>
+                <option value='protein'>protein</option>
+                <option value='organism'>organism</option>
+            </select><br>
+                What to look for<input type='text' name='description'><br>
+                Limit <input type='number' name='limit'>
+            </p>
+            <p>
+                {% for value_1 in values_1 %}
+                    <input type='checkbox' name={{ value_1 }} value={{ value_1 }}'>
+                    {{ value_1 }}
+                    <br>
+                {% endfor %}<br>
+                {% for value_2 in values_2 %}
+                    <input type='checkbox' name={{ value_2 }} value={{ value_2 }}'>
+                    {{ value_2 }}
+                    <br>
+                {% endfor %}
+
+                <input type='submit' name='submit' value='Submit'><br><br>
+            </p>
+        </form>
+    </div>
+</div>
+<div class="Table-area">
+    <div class="table-part">
+        {% if rows != '' %}
+            <table>
+                <tr>
+                    {% if not count %}
+                        {% for show in show_values %}
+                            <th>{{ show }}</th>
+                        {% endfor %}
+                    {% else %}
+                        {% for show in show_values %}
+                            <th>{{ show }}</th>
+                            <th>Amount</th>
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+                {% if accession %}
+                    {% for row, link in rows %}
+                        <tr>
+                        {% if not row[1] %}
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[0] }}</a>
+                            </td>
+                        {% elif not row[2] %}
+                            <td>{{ row[0] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[1] }}</a>
+                            </td>
+                        {% elif not row[3] %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[2] }}</a>
+                            </td>
+                        {% elif not row[4] %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[3] }}</a>
+                            </td>
+                        {% elif not row[5] %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[4] }}</a>
+                            </td>
+                        {% elif not row[6] %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[5] }}</a>
+                            </td>
+                        {% elif not row[7] %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>{{ row[5] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[6] }}</a>
+                            </td>
+                        {% elif not row[8] %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>{{ row[5] }}</td>
+                            <td>{{ row[6] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[7] }}</a>
+                            </td>
+                        {% elif not row[9] %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>{{ row[5] }}</td>
+                            <td>{{ row[6] }}</td>
+                            <td>{{ row[7] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[8] }}</a>
+                            </td>
+                        {% else %}
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>{{ row[5] }}</td>
+                            <td>{{ row[6] }}</td>
+                            <td>{{ row[7] }}</td>
+                            <td>{{ row[8] }}</td>
+                            <td>
+                                <a href={{ link }} target="_blank">{{ row[9] }}</a>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+
+                {% endif %}
+
+
+                {% if not accession %}
+                    {% for row in rows %}
+                        <tr>
+                            {% if not row[1] %}
+                                <td>
+                                    {{ row[0] }}
+                                </td>
+                            {% elif not row[2] %}
+                                <td>{{ row[0] }}</td>
+                                <td>
+                                    {{ row[1] }}
+                                </td>
+                            {% elif not row[3] %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>
+                                    {{ row[2] }}
+                                </td>
+                            {% elif not row[4] %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>
+                                    {{ row[3] }}
+                                </td>
+                            {% elif not row[5] %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>
+                                    {{ row[4] }}
+                                </td>
+                            {% elif not row[6] %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>
+                                    {{ row[5] }}
+                                </td>
+                            {% elif not row[7] %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>{{ row[5] }}</td>
+                                <td>
+                                    {{ row[6] }}
+                                </td>
+                            {% elif not row[8] %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>{{ row[5] }}</td>
+                                <td>{{ row[6] }}</td>
+                                <td>
+                                    {{ row[7] }}
+                                </td>
+                            {% elif not row[9] %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>{{ row[5] }}</td>
+                                <td>{{ row[6] }}</td>
+                                <td>{{ row[7] }}</td>
+                                <td>
+                                    {{ row[8] }}
+                                </td>
+                            {% else %}
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>{{ row[5] }}</td>
+                                <td>{{ row[6] }}</td>
+                                <td>{{ row[7] }}</td>
+                                <td>{{ row[8] }}</td>
+                                <td>{{ row[9] }}</td>
+                                </tr>
+                            {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+            </table>
+        {% endif %}
+    </div>
+
+</div>
 </body>
 </html>
