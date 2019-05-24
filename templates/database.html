@@ -5,10 +5,11 @@
     <title>Blast Results</title>
     <link rel="stylesheet"
           href='{{ url_for('static', filename= 'index.css') }}'>
+    <script src= {{ url_for('static', filename='show.js') }}></script>
 </head>
 <body>
 <div class="navbar">
-    <a href="#" class="logo">Eindopdracht</a>
+    <a href="/" class="logo">Eindopdracht</a>
     <ul class="nav">
         <li><a href="/">Home</a></li>
         <li><a href="database.html">Database</a></li>
@@ -19,7 +20,6 @@
 
 <div class="Database" id="Database">
     <div class="text-part">
-        <h1>The Database</h1>
         <form method='get'>
             <p>
                 Do you want to <select name='choice'>
@@ -27,51 +27,64 @@
                 <option value='count'>count</option>
             </select><br>
                 Search for something in <select name='select'>
-                <option value='protein'>protein</option>
                 <option value='organism'>organism</option>
+                <option value='protein'>protein</option>
             </select><br>
                 What to look for<input type='text' name='description'><br>
                 Limit <input type='number' name='limit'>
             </p>
-            <p>
+            <p style="display: inline;">
                 {% for value_1 in values_1 %}
-                    <input type='checkbox' name={{ value_1 }} value={{ value_1 }}'>
+                    <input type="checkbox"
+                           name={{ value_1 }} value={{ value_1 }}>
                     {{ value_1 }}
-                    <br>
-                {% endfor %}<br>
-                {% for value_2 in values_2 %}
-                    <input type='checkbox' name={{ value_2 }} value={{ value_2 }}'>
-                    {{ value_2 }}
                     <br>
                 {% endfor %}
 
-                <input type='submit' name='submit' value='Submit'><br><br>
+                <button class="button-show" type="button"
+                        onclick="show_hide()">More options
+                </button>
             </p>
+            <div id="hidden" style="display: none;">
+                {% for value_2 in values_2 %}
+                    <input class="more-options" type="checkbox"
+                           name={{ value_2 }} value={{ value_2 }}>{{ value_2 }}
+                    <br>
+                {% endfor %}
+
+            </div>
+            <input type='submit' name='submit' value='Submit'><br>
+
         </form>
     </div>
 </div>
 <div class="Table-area">
     <div class="table-part">
-        {% if rows != '' %}
+        {% if data != '' %}
             <table>
                 <tr>
-                    {% if not count %}
-                        {% for show in show_values %}
-                            <th>{{ show }}</th>
-                        {% endfor %}
+                    {% if rows %}
+                        {% if not count %}
+                            {% for show in show_values %}
+                                <th>{{ show }}</th>
+                            {% endfor %}
+                        {% else %}
+                            {% for show in show_values %}
+                                <th>{{ show }}</th>
+                                <th>Amount</th>
+                            {% endfor %}
+                        {% endif %}
                     {% else %}
-                        {% for show in show_values %}
-                            <th>{{ show }}</th>
-                            <th>Amount</th>
-                        {% endfor %}
+                        <p align="center">There are no results with the used
+                            parameters</p>
                     {% endif %}
                 </tr>
                 {% if accession %}
-                    {% for row, link in rows %}
+                    {% for row, link in data %}
                         <tr>
                         {% if not row[1] %}
                             <td>
-                                <a href={{ link }} target="_blank">{{ row[0] }}</a>
+                                <a href={{ link }} target="_blank">{{ row[index] }}</a>
                             </td>
                         {% elif not row[2] %}
                             <td>{{ row[0] }}</td>
@@ -161,7 +174,7 @@
 
 
                 {% if not accession %}
-                    {% for row in rows %}
+                    {% for row in data %}
                         <tr>
                             {% if not row[1] %}
                                 <td>

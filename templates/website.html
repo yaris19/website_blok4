@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blast Results</title>
-    <link rel="stylesheet" href='{{ url_for('static', filename= 'index.css') }}'>
+    <title>Champignon project</title>
+    <link rel="stylesheet"
+          href='{{ url_for('static', filename= 'index.css') }}'>
 </head>
 <body>
 <div class="navbar">
-    <a href="#" class="logo">Eindopdracht</a>
+    <a href="#" class="logo">Champignon project</a>
     <ul class="nav">
         <li><a href="#Home">Home</a></li>
         <li><a href="#Database">Database</a></li>
@@ -21,8 +22,8 @@
 <div class="Database-area" id="Database">
     <div class="text-part">
         <h1>The Database</h1>
-        <p> Filtering out stuff.</p>
-        <p>Let's take a look at the <a href="database.html" class="button">Database</a></p>
+        <p>Let's take a look at the <a href="/database"
+                                       class="button">Database</a></p>
 
     </div>
 </div>
@@ -31,55 +32,66 @@
     <div class="text-part">
         <h1>About</h1>
         <p> How does it all work and how has it been made?</p>
-        <p>More specific details! <a href="about.html"></a>here</p>
+        <button class="accordion">How does it work?</button>
+        <div class="panel">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
     </div>
 </div>
 
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
 <div class="Sources_area" id="Sources">
     <div class="text-part">
         <h1>Sources</h1>
         <p> All used sources.</p>
-        chapter 7.1 from<br><a href="http://biopython.org/DIST/docs/tutorial/Tutorial.html">Chang, J., Chapman, B., Friedberg, I.,
-            Hamelryck, T., Hoon, P., Cock, P., … Wilczyński, B. (n.d.). Biopython Tutorial and Cookbook. Retrieved May
-            11, 2019, from http://biopython.org/DIST/docs/tutorial/Tutorial.html</a>
+        chapter 7.1 from<br><a
+            href="http://biopython.org/DIST/docs/tutorial/Tutorial.html">Chang,
+        J., Chapman, B., Friedberg, I.,
+        Hamelryck, T., Hoon, P., Cock, P., … Wilczyński, B. (n.d.). Biopython
+        Tutorial and Cookbook. Retrieved May
+        11, 2019, from
+        http://biopython.org/DIST/docs/tutorial/Tutorial.html</a>
         <hr>
-        <a href="http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html">Bio.Blast.Record.HSP. (n.d.).
-            Retrieved May 12, 2019, from http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html</a>
+        <a href="http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html">Bio.Blast.Record.HSP.
+            (n.d.).
+            Retrieved May 12, 2019, from
+            http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html</a>
         <hr>
-        <a href="https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html">Bio.Blast.Record. (n.d.). Retrieved
-            May 13, 2019, from https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html</a>
+        <a href="https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html">Bio.Blast.Record.
+            (n.d.). Retrieved
+            May 13, 2019, from
+            https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html</a>
         <hr>
-        <a href="https://www.biostars.org/p/95101/">Tressler, J., & P. (n.d.). Extracting Accession Numbers With
-            Ncbixml.Parse. Retrieved May 17, 2019, from https://www.biostars.org/p/95101/</a>
+        <a href="https://www.biostars.org/p/95101/">Tressler, J., & P. (n.d.).
+            Extracting Accession Numbers With
+            Ncbixml.Parse. Retrieved May 17, 2019, from
+            https://www.biostars.org/p/95101/</a>
         <hr>
-        <a href="https://www.biostars.org/p/180510/">Biopython - calculating query coverage and Identity. (n.d.).
+        <a href="https://www.biostars.org/p/180510/">Biopython - calculating
+            query coverage and Identity. (n.d.).
             Retrieved May 18, 2019, from https://www.biostars.org/p/180510/</a>
         <hr>
         <a href="https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html">Bio.SearchIO._model.hsp.HSP.
             (n.d.). Retrieved May 14, 2019, from
             https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html</a></p>
-    </div>
-</div>
-
-
-<div class="final__accordion">
-    <div class="accordion__item">
-        <a href="#final__tab1" class="accordion__trigger accordion__title">Accordion 1</a>
-        <div id="final__tab1" class="accordion__content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Dolor laborum, rerum quasi rem placeat quo ratione qui, optio id eaque laudantium reprehenderit aliquam vel
-            cum necessitatibus ut doloremque ullam natus.</p></div>
-    </div>
-    <div class="accordion__item">
-        <a href="#final__tab2" class="accordion__trigger accordion__title">Accordion 2</a>
-        <div id="final__tab2" class="accordion__content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Dolor laborum, rerum quasi rem placeat quo ratione qui, optio id eaque laudantium reprehenderit aliquam vel
-            cum necessitatibus ut doloremque ullam natus.</p></div>
-    </div>
-    <div class="accordion__item">
-        <a href="#final__tab3" class="accordion__trigger accordion__title">Accordion 3</a>
-        <div id="final__tab3" class="accordion__content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Dolor laborum, rerum quasi rem placeat quo ratione qui, optio id eaque laudantium reprehenderit aliquam vel
-            cum necessitatibus ut doloremque ullam natus.</p></div>
     </div>
 </div>
 </body>
