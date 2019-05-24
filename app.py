@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import mysql.connector
+import itertools
 
 app = Flask(__name__)
 
@@ -9,7 +10,7 @@ def home():
     return render_template('website.html')
 
 
-@app.route('/database.html', methods=['GET', 'POST'])
+@app.route('/database', methods=['GET', 'POST'])
 def site():
     # make a connection with the database
     connection = mysql.connector.connect(
@@ -44,16 +45,19 @@ def site():
             'description') + "%' or organism_family like '%" + request.args.get(
             'description') + "%' "
 
-    # new list with the values that should be shown in the table
+    # new list with the values that the user selected which should be shown
+    # in the table
     show_values = []
-    for value_1, value_2 in zip(values_1, values_2):
+    for value_1, value_2 in itertools.zip_longest(values_1[0:-1], values_2):
         if value_1 in request.args:
             # append the values that user selected to new list
             show_values.append(value_1)
         if value_2 in request.args:
             show_values.append(value_2)
+    if values_1[-1] in request.args:
+        show_values.append(values_1[-1])
+
     # seperate the values with a comma
-    print(show_values)
     select = ','.join(show_values)
 
     # get choice from user
@@ -83,10 +87,10 @@ def site():
         # cursor.execute(query)
         # rows = cursor.fetchall()
         # return empty html file when site is loaded for first time
-        return render_template('database.html', rows='',
+        return render_template('database.html', data='',
                                show_values=['header', 'sequence', 'score'],
-                               values_1=values_1, values_2=values_2, count='',
-                               ncbi_links='')
+                               values_1=values_1, values_2=values_2, count=None,
+                               ncbi_links=None, rows='')
     else:
         # run query in database
         cursor.execute(query)
@@ -96,18 +100,18 @@ def site():
             for row in rows:
                 link = 'https://www.ncbi.nlm.nih.gov/protein/' + row[-1]
                 ncbi_links.append(link)
-            rows = zip(rows, ncbi_links)
+            data = zip(rows, ncbi_links)
             # return html file with all the variables
-            return render_template('database.html', rows=rows,
+            return render_template('database.html', data=data,
                                    show_values=show_values,
                                    count=count, values_1=values_1,
-                                   values_2=values_2, accession=True)
+                                   values_2=values_2, accession=True, rows=rows)
         else:
-            print(rows)
-            return render_template('database.html', rows=rows,
+            data = rows
+            return render_template('database.html', data=data,
                                    show_values=show_values,
                                    values_1=values_1, values_2=values_2,
-                                   count=count, accession=False)
+                                   count=count, accession=False, rows=rows)
 
 
 if __name__ == '__main__':
