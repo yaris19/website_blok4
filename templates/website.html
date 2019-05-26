@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Champignon project</title>
+    <title>Mushroom project</title>
     <link rel="stylesheet"
           href='{{ url_for('static', filename= 'index.css') }}'>
 </head>
 <body>
 <div class="navbar">
-    <a href="#" class="logo">Champignon project</a>
+    <a href="#" class="logo">Mushroom project</a>
     <ul class="nav">
         <li><a href="#Home">Home</a></li>
         <li><a href="#Database">Database</a></li>
@@ -21,9 +21,94 @@
 
 <div class="Database-area" id="Database">
     <div class="text-part">
-        <h1>The Database</h1>
-        <p>Let's take a look at the <a href="/database"
-                                       class="button">Database</a></p>
+        <h1>Database</h1>
+        <p>
+            The <a href="/database" class="button">database</a> contains data
+            of 200 DNA sequences provided by BLAST. In total 174 sequences had
+            one or more results. Only the first 30 results per sequence have
+            been saved to the database. If a sequence had less than 30 results,
+            all of its results have been saved. The database can be searched
+            with multiple parameters.
+        </p>
+        <button class="accordion-database">More information about the
+            parameters
+        </button>
+        <div class="panel-database">
+            <p>
+                <b>Search:</b> search the database with multiple paramters.
+                A choice can be made aided by checkboxes what to
+                search in the database, e.g. header, defenition etc.<br>
+
+                <b>Count:</b> search the database, and count how many times
+                an item occurs. There can only be chosen <b>1</b>
+                checkbox.<br>
+
+                <b>Organism:</b> an option to choose to search in the
+                organism database.
+                The choices are: species, genus and family. (See 'what to
+                look for', for more information)<br>
+
+                <b>Protein:</b> an option to choose to search in the
+                organism database.
+                The choices are: accession code and defenition. (See what
+                to look for, for more information)<br>
+
+                <b>What to look for:</b> an option to filter something in
+                the database<br>If the previous choice was <b>organism:</b>
+                the options to search for are a species (e.g.
+                Gammaproteobacteria bacterium), a genus (e.g.
+                Gammaproteobacteria) or a family (e.g. Proteobacteria)<br>
+                If the previous choise was <b>protein:</b> the options to
+                search for are either a defenition (e.g. outer membrane protein
+                assembly factor BamB) or an accession code (e.g. TDJ28483)<br>
+
+                <b>Limit:</b> an option to limit the amount of results that
+                will be shown in a table<br><br>
+
+                <b>Search:</b> search the database with all the selected
+                parameters
+                The options for what to show in the table:
+            </p>
+
+            <ul class="database-options">
+                <li>
+                    <b>Header:</b> The header of each DNA sequence
+                </li>
+                <li>
+                    <b>Defenition:</b> The defenition of the protein
+                </li>
+                <li>
+                    <b>Orgaism_species:</b> The name of the species
+                </li>
+                <li>
+                    <b>Ident_perc:</b> The identity percentage, calculated by
+                    the amout of identities divided by the length of the
+                    alignment
+                </li>
+                <li>
+                    <b>Accession:</b> The accession code (NCBI) of the protein
+                </li>
+                <li>
+                    <b>Sequence:</b> The DNA sequence that is used to BLAST
+                </li>
+                <li>
+                    <b>Organism_genus:</b> The name of the genus, which is
+                </li>
+                <li>
+                    <b>Organism_family:</b> The name of the family, which is
+                <li>
+                    <b>Query_cov:</b> The query coverage, calculated by (end of
+                    hit minus begin of hit) divided by the length of the DNA
+                    sequence
+                </li>
+                <li>
+                    <b>E_value:</b> The e-value which stands for the amout of
+                    random sequences in the NCBI database with the same of a
+                    higher bitscore
+                </li>
+
+            </ul>
+        </div>
 
     </div>
 </div>
@@ -32,32 +117,35 @@
     <div class="text-part">
         <h1>About</h1>
         <p> How does it all work and how has it been made?</p>
-        <button class="accordion">How does it work?</button>
-        <div class="panel">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.</p>
+        <button class="accordion-about">How does it work?</button>
+        <div class="panel-about">
+            <p>Morgan</p>
+        </div>
+        <button class="accordion-about">How was it made?</button>
+        <div class="panel-about">
+            <p>
+                First of all, a Python script was made to automatically BLAST
+                200 DNA sequences, in which the tool biopyton was used. All of
+                the data which BLAST provided was saved to an XML file. Then, a
+                Python function was made to parse the XML file, and retrieve
+                the important data. In addition, a Python function was made to
+                automatically insert the retrieved data into a self-created
+                database. <br>
+                Secondly, this website was created, aided by Python and the
+                Flask package.
+            </p>
+        </div>
+        <button class="accordion-about">Who are the creators?</button>
+        <div class="panel-about">
+            <p>Stijn</p>
+        </div>
+        <button class="accordion-about">The given task</button>
+        <div class="panel-about">
+            <p>Stijn, zet er ook bij over forward en reverse sequenties</p>
         </div>
     </div>
 </div>
 
-<script>
-    var acc = document.getElementsByClassName("accordion");
-    var i;
-
-    for (i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel.style.maxHeight) {
-                panel.style.maxHeight = null;
-            } else {
-                panel.style.maxHeight = panel.scrollHeight + "px";
-            }
-        });
-    }
-</script>
 <div class="Sources_area" id="Sources">
     <div class="text-part">
         <h1>Sources</h1>
@@ -91,8 +179,26 @@
         <hr>
         <a href="https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html">Bio.SearchIO._model.hsp.HSP.
             (n.d.). Retrieved May 14, 2019, from
-            https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html</a></p>
+            https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html</a><br>
     </div>
 </div>
+
+<script>
+    let acc = document.querySelectorAll(".accordion-database, .accordion-about");
+    let i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            let panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
