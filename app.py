@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template
 from Bio.Blast import NCBIWWW
-from Bio.Blast import NCBIXML
 from Bio.Seq import Seq
 from Bio import SearchIO
 import re
@@ -47,8 +46,8 @@ def database():
     elif name == 'organism':
         search = " where organism_species like '%" + request.args.get(
             'description') + "%' or organism_genus like '%" + request.args.get(
-            'description') + "%' or organism_family like '%" + request.args.get(
-            'description') + "%' "
+            'description') + "%' or organism_family like '%" + \
+                 request.args.get('description') + "%' "
 
     # new list with the values that the user selected which should be shown
     # in the table
@@ -161,7 +160,8 @@ def blast():
 
         # for result in result_list:
         #     connection = mysql.connector.connect(
-        #         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
+        #         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.'
+        #              'database.azure.com',
         #         user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
         #         database='fifkv',
         #         password='613633')
@@ -177,7 +177,8 @@ def blast():
         #     cursor.execute(
         #         "insert into sequence(seq_id, sequence, header, score)"
         #         " values ('{}', '{}', '{}', null)".format(seq_id,
-        #                                                   result[1], result[0]))
+        #                                                   result[1],
+        #                                                   result[0]))
         #     cursor.execute(
         #         "insert into protein(name_id, definition, "
         #         "accession) values ('{}', '{}', '{}')".format(prot_id,
@@ -190,7 +191,7 @@ def blast():
         #                                                  result[3]))
         #     cursor.execute(
         #         "insert into protein_attribute(protein_id, seq_id, "
-        #         "organism_id, name_id, ident_num, pos_num, gap_num, e_value, "
+        #         "organism_id, name_id, ident_num, pos_num, gap_num, e_value,"
         #         "bit_score, ident_perc, query_cov) values ('{}', '{}', '{}',"
         #         " '{}', null, null, null, null, null, '{}', null)".format(
         #             prot_id, seq_id, prot_id, prot_id, result[4]))
