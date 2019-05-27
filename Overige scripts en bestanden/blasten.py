@@ -181,7 +181,7 @@ def read_xml_file(file_name, first50, read1):
         for res in range(len(result)):
             if counter < saving_hits:
                 accession = result[res].accession
-                defenition = result[res].description
+                definition = result[res].description
                 id_ = result[res][0].query_id
                 bitscore = result[res][0].bitscore
                 evalue = result[res][0].evalue
@@ -194,7 +194,7 @@ def read_xml_file(file_name, first50, read1):
                 query_cov = round(([hit[1] - hit[0] for hit in hit_range][0])
                                   / 301 * 100, 2)
                 result_list.append(
-                    [sequence_id, accession, id_, defenition, bitscore,
+                    [sequence_id, accession, id_, definition, bitscore,
                      evalue, ident_num, pos_num, gap_num, ident_perc,
                      query_cov])
 
@@ -239,8 +239,8 @@ def insert_database_protein(result_list):
     # name of protein is between brackets [ ]
     prot = r'\[(.*?)\]'
 
-    # defenition of protein is untill opening bracket [
-    defenition = r'.*\['
+    # definition of protein is untill opening bracket [
+    definition = r'.*\['
 
     connection = connection_database()
     cursor = connection.cursor()
@@ -252,12 +252,12 @@ def insert_database_protein(result_list):
     counter = amount_res + 1
 
     for result in result_list:
-        match_def = re.search(defenition, result[3])
+        match_def = re.search(definition, result[3])
         match_prot = re.search(prot, result[3])
         if match_def:
             protein = match_def.group().replace('[', '')
             cursor.execute(
-                "insert into protein(name_id, defenition, "
+                "insert into protein(name_id, definition, "
                 "accession) values ('{}', '{}', '{}')".format(counter,
                                                               protein,
                                                               result[1]))
