@@ -40,8 +40,8 @@ def main():
 
 def connection_database():
     """
-    Make connection to the database
-    :return: The connection
+    Make connection to the database, where the data will be saved.
+    :return: The connection.
     """
     connection = mysql.connector.connect(
         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
@@ -54,10 +54,12 @@ def connection_database():
 def read_file():
     """
     Reading the CSV file and doing multiple things:
-    1. Formatting FASTQ scores to decimal scores
+    1. Formatting FASTQ scores to decimal scores.
     2. Creating fasta files with the sequences from read 1
-    and read 2. Each fasta file contains 50 sequences
-    :return: List with headers, sequences and decimal scores
+    and read 2. Each fasta file contains 50 sequences.
+    3. Creating a list for the forward and reverse sequences. Each list
+    containing the header, sequences and decimal score.
+    :return: List with headers, sequences and decimal scores.
     """
     excel_file = open('data_groep7.csv', 'r')
     # get amount of sequences
@@ -131,10 +133,10 @@ def read_file():
 
 def blastx(input_file_name, output_file_name):
     """
-    Blasting the fasta files
-    :param input_file_name: name of the fasta file
-    :param output_file_name:  name of the XML file that will be created
-    :return: an XML file with the BLAST output
+    Blasting the fasta files.
+    :param input_file_name: name of the fasta file.
+    :param output_file_name:  name of the XML file that will be created.
+    :return: an XML file with the BLAST output.
     """
     print('started at', datetime.now())
     file = open(input_file_name, 'r').read()
@@ -151,13 +153,13 @@ def blastx(input_file_name, output_file_name):
 def read_xml_file(file_name, first50, read1):
     """
     Parsing the XML file, and getting values. And calculating values
-    based on the values in the XML file
-    :param file_name: Name of fasta file that should be used
+    based on the values in the XML file.
+    :param file_name: Name of fasta file that should be used.
     :param first50: boolean, True if the fasta file contains the first 50
-    sequences, False if the file contains the last 50 sequences
+    sequences, False if the file contains the last 50 sequences.
     :param read1: boolean, True if the fasta file contains the read 1 sequnces,
-    False if the file contains the read 2 sequences
-    :return: a list with all the results from the XML file
+    False if the file contains the read 2 sequences.
+    :return: a list with all the results from the XML file.
     """
     warnings.simplefilter('ignore', BiopythonWarning)
     blast_results = SearchIO.parse(file_name, 'blast-xml')
@@ -206,9 +208,9 @@ def read_xml_file(file_name, first50, read1):
 
 def insert_database_sequence(seq_forward, seq_reverse):
     """
-    Inserting the header, sequence and score into the database
-    :param seq_forward: list with the headers, sequences and scores of read 1
-    :param seq_reverse: list with the headers, sequences and scores of read 2
+    Inserting the header, sequence and score into the database.
+    :param seq_forward: list with the headers, sequences and scores of read 1.
+    :param seq_reverse: list with the headers, sequences and scores of read 2.
     """
 
     connection = connection_database()
@@ -232,9 +234,9 @@ def insert_database_sequence(seq_forward, seq_reverse):
 
 def insert_database_protein(result_list):
     """
-    Inserting all the results into the database
-    :param result_list: List with all the results
-    :return: An updated database
+    Inserting all the results into the database.
+    :param result_list: List with all the results.
+    :return: An updated database.
     """
     # name of protein is between brackets [ ]
     prot = r'\[(.*?)\]'
@@ -294,13 +296,14 @@ def insert_database_protein(result_list):
 
 def get_genus_family():
     """
-    Update the organism table with genus and family
-    :return: An updated database
+    Update the organism table with genus and family.
+    :return: An updated database.
     """
+    # the entrez function needs an email, so there won't be an error message
     Entrez.email = 'yarisvanthiel@gmail.com'
+
     connection = connection_database()
     cursor = connection.cursor()
-
     cursor.execute("select name_id, accession from protein")
     accession_codes = cursor.fetchall()
     for code in accession_codes:
@@ -318,6 +321,28 @@ def get_genus_family():
                             "organism_genus = null where organism_id = '{}'"
                             "".format(code[0])))
         connection.commit()
+    connection.close()
+
+
+def update_query_cover(result_list):
+    """
+    Updates the database with the correct query coverage. The query coverage
+    was wrongly calculated in the function read_xml_file.
+    Which has been changed. The variable counter should be changed manually.
+    :param result_list: The result list
+    :return:
+    """
+    connection = connection_database()
+    cursor = connection.cursor()
+
+    # the counter, which is based on the row that has not been changed yet.
+    counter = 3489
+
+    for result in result_list:
+        cursor.execute("update (protein_attribute) set query_cov = '{}' where "
+                       "protein_id = '{}'".format(result[10], counter))
+        connection.commit()
+        counter += 1
     connection.close()
 
 

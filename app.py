@@ -19,7 +19,7 @@ def site():
         database='fifkv',
         password='613633')
     cursor = connection.cursor()
-    values_1 = ['Header', 'definition', 'Organism_species', 'Ident_perc',
+    values_1 = ['Header', 'Definition', 'Organism_species', 'Ident_perc',
                 'Accession']
     values_2 = ['Sequence', 'Organism_genus', 'Organism_family', 'Query_cov',
                 'E_value', ]
