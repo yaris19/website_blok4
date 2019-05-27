@@ -1,4 +1,9 @@
 from flask import Flask, request, render_template
+from Bio.Blast import NCBIWWW
+from Bio.Blast import NCBIXML
+from Bio.Seq import Seq
+
+
 import mysql.connector
 import itertools
 
@@ -11,7 +16,7 @@ def home():
 
 
 @app.route('/database', methods=['GET', 'POST'])
-def site():
+def database():
     # make a connection with the database
     connection = mysql.connector.connect(
         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
@@ -56,7 +61,6 @@ def site():
             show_values.append(value_2)
     if values_1[-1] in request.args:
         show_values.append(values_1[-1])
-
     # seperate the values with a comma
     select = ','.join(show_values)
 
@@ -89,13 +93,15 @@ def site():
         # return empty html file when site is loaded for first time
         return render_template('database.html', data='',
                                show_values=['header', 'sequence', 'score'],
-                               values_1=values_1, values_2=values_2, count=None,
+                               values_1=values_1, values_2=values_2,
+                               count=None,
                                ncbi_links=None, rows='')
     else:
         # run query in database
         cursor.execute(query)
         rows = cursor.fetchall()
         ncbi_links = []
+
         if 'Accession' in show_values:
             for row in rows:
                 link = 'https://www.ncbi.nlm.nih.gov/protein/' + row[-1]
@@ -105,13 +111,23 @@ def site():
             return render_template('database.html', data=data,
                                    show_values=show_values,
                                    count=count, values_1=values_1,
-                                   values_2=values_2, accession=True, rows=rows)
+                                   values_2=values_2, accession=True,
+                                   rows=rows)
         else:
             data = rows
             return render_template('database.html', data=data,
                                    show_values=show_values,
                                    values_1=values_1, values_2=values_2,
                                    count=count, accession=False, rows=rows)
+
+
+@app.route('/blast', methods=['GET', 'POST'])
+def blast():
+    input_seq = request.args.get('sequence')
+    sequence = Seq(input_seq)
+    print(sequence)
+
+    return render_template('blast.html')
 
 
 if __name__ == '__main__':

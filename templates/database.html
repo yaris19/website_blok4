@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Blast Results</title>
     <link rel="stylesheet"
-          href='{{ url_for('static', filename= 'index.css') }}'>
-    <script src= {{ url_for('static', filename='show.js') }}></script>
+          href="{{ url_for("static", filename= "index.css") }}">
+    <script src= {{ url_for("static", filename="show.js") }}></script>
 </head>
 <body>
 <div class="navbar">
@@ -20,19 +20,19 @@
 
 <div class="Database" id="Database">
     <div class="text-part">
-        <form method='get'>
-        <h1>Search the database</h1>
-            <p>
-                Use the database to <select name='choice'>
-                <option value='search'>search</option>
-                <option value='count'>count</option>
+        <form method="get">
+            <h1>Search the database</h1>
+            <p><a href="/blast" class="button">BLAST</a> your own sequence</p>
+            <p>Use the database to <select name="choice">
+                <option value="search">search</option>
+                <option value="count">count</option>
             </select><br>
-                Search for something in <select name='select'>
-                <option value='organism'>organism</option>
-                <option value='protein'>protein</option>
-            </select><br>
-                Search for <input type='text' name='description'><br>
-                Limit <input type='number' name='limit' placeholder="10">
+                Search for something in <select name="select">
+                    <option value="organism">organism</option>
+                    <option value="protein">protein</option>
+                </select><br>
+                Search for <input type="text" name="description"><br>
+                Limit <input type="number" name="limit" placeholder="10">
             </p>
             <p style="display: inline;">
                 {% for value_1 in values_1 %}
@@ -54,13 +54,13 @@
                 {% endfor %}
 
             </div>
-            <input type='submit' name='submit' value='Search'><br><br>
+            <input type="submit" name="submit" value="Search"><br><br>
         </form>
     </div>
 </div>
 <div class="Table-area">
     <div class="table-part">
-        {% if data != '' %}
+        {% if data != "" %}
             <table>
                 <tr>
                     {% if rows %}
@@ -84,7 +84,7 @@
                         <tr>
                         {% if not row[1] %}
                             <td>
-                                <a href={{ link }} target="_blank">{{ row[index] }}</a>
+                                <a href={{ link }} target="_blank">{{ row[0] }}</a>
                             </td>
                         {% elif not row[2] %}
                             <td>{{ row[0] }}</td>
