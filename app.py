@@ -2,6 +2,8 @@ from flask import Flask, request, render_template
 from Bio.Blast import NCBIWWW
 from Bio.Seq import Seq
 from Bio import SearchIO
+from Bio import BiopythonWarning
+import warnings
 import re
 import mysql.connector
 import itertools
@@ -124,8 +126,13 @@ def database():
 def blast():
     input_seq = request.args.get('sequence')
     header = request.args.get('header')
+
+    # name of organism is between brackets [ ]
     org = r'\[(.*?)\]'
+
+    # definition of protein is untill opening bracket [
     defi = r'.*\['
+
     result_list = []
     organism = ''
     protein = ''
@@ -134,6 +141,7 @@ def blast():
     sequence = Seq(input_seq)
 
     if input_seq != '':
+        warnings.simplefilter('ignore', BiopythonWarning)
         result_handle = NCBIWWW.qblast('blastx', 'nr', sequence,
                                        word_size=6, gapcosts='11 1',
                                        expect=0.0001, format_type='XML')
@@ -155,6 +163,7 @@ def blast():
                 result_list.append(
                     [header, input_seq, protein, organism, ident_perc,
                      accession])
+
         # code to insert the results into the database, but to avoid getting
         # junk code in the database, we decided to comment it out.
 
