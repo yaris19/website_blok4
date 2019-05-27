@@ -9,10 +9,10 @@
 </head>
 <body>
 <div class="navbar">
-    <a href="/" class="logo">Eindopdracht</a>
+    <a href="/" class="logo">Mushroom project</a>
     <ul class="nav">
         <li><a href="/">Home</a></li>
-        <li><a href="database.html">Database</a></li>
+        <li><a href="/#Database">Database</a></li>
         <li><a href="/#About">About</a></li>
         <li><a href="/#Sources">Sources</a></li>
     </ul>
@@ -21,8 +21,9 @@
 <div class="Database" id="Database">
     <div class="text-part">
         <form method='get'>
+        <h1>Search the database</h1>
             <p>
-                Do you want to <select name='choice'>
+                Use the database to <select name='choice'>
                 <option value='search'>search</option>
                 <option value='count'>count</option>
             </select><br>
@@ -30,7 +31,7 @@
                 <option value='organism'>organism</option>
                 <option value='protein'>protein</option>
             </select><br>
-                What to look for<input type='text' name='description'><br>
+                Search for <input type='text' name='description'><br>
                 Limit <input type='number' name='limit'>
             </p>
             <p style="display: inline;">
@@ -42,7 +43,7 @@
                 {% endfor %}
 
                 <button class="button-show" type="button"
-                        onclick="show_hide()">More options
+                        onclick="show_hide()">More/less options
                 </button>
             </p>
             <div id="hidden" style="display: none;">
@@ -53,8 +54,7 @@
                 {% endfor %}
 
             </div>
-            <input type='submit' name='submit' value='Submit'><br>
-
+            <input type='submit' name='submit' value='Search'><br><br>
         </form>
     </div>
 </div>

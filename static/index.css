@@ -48,22 +48,23 @@ a.hover {
 }
 
 .button {
-    -moz-box-shadow: 0 1px 0 0 #694632;
-    -webkit-box-shadow: 0 1px 0 0 #694632;
-    box-shadow: 0 1px 0 0 #694632;
-    background-color: #CEB8A2;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    /*-moz-box-shadow: 0 1px 0 0 #694632;*/
+    /*-webkit-box-shadow: 0 1px 0 0 #694632;*/
+    /*box-shadow: 0 1px 0 0 #694632;*/
+    background-color: #694632;
+    /*-moz-border-radius: 10px;*/
+    /*-webkit-border-radius: 10px;*/
+    /*border-radius: 10px;*/
     display: inline-block;
     cursor: pointer;
-    color: #694632;
+    color: #CEB8A2;
     font-family: Arial, "Times New Roman", serif;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
-    padding: 12px 16px;
-    text-decoration: none;
-    text-shadow: 0 1px 0 #CEB8A2;
+    /*padding: 12px 12px;*/
+    margin: 0;
+    text-transform: none;
+    /*text-decoration: none;*/
 }
 
 .button:hover {
@@ -162,14 +163,18 @@ a.hover {
 }
 
 h1 {
-    font-size: 50px;
+    font-size: 40px;
     font-family: Arial, "Times New Roman", serif;
 }
 
 p {
-    font-size: 24px;
+    font-size: 20px;
 }
 
+
+.database-options {
+    font-size: 18px;
+}
 
 html {
     scroll-behavior: smooth;
@@ -219,7 +224,7 @@ tr:nth-child(odd) {
     cursor: pointer;
 }
 
-.accordion {
+.accordion-about {
     background-color: #CEB8A2;
     color: #694632;
     cursor: pointer;
@@ -232,11 +237,8 @@ tr:nth-child(odd) {
     transition: 0.4s;
 }
 
-.active, .accordion:hover {
-    background-color: #D1CAC2;
-}
 
-.accordion:after {
+.accordion-about:after {
     content: '\002B';
     color: #694632;
     font-weight: bold;
@@ -244,13 +246,48 @@ tr:nth-child(odd) {
     margin-left: 5px;
 }
 
-.active:after {
+.active-about:after {
     content: "\2212";
 }
 
-.panel {
+.panel-about {
     padding: 0 18px;
     background-color: #CEB8A2;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+
+.accordion-database {
+    background-color: #694632;
+    color: #CEB8A2;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 20px;
+    transition: 0.4s;
+}
+
+
+.accordion-database:after {
+    content: '\002B';
+    color: #CEB8A2;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.active-database:after {
+    content: "\2212";
+}
+
+.panel-database {
+    padding: 0 18px;
+    background-color: #694632;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
