@@ -1,4 +1,10 @@
 from flask import Flask, request, render_template
+from Bio.Blast import NCBIWWW
+from Bio.Seq import Seq
+from Bio import SearchIO
+from Bio import BiopythonWarning
+import warnings
+import re
 import mysql.connector
 import itertools
 
@@ -11,7 +17,7 @@ def home():
 
 
 @app.route('/database', methods=['GET', 'POST'])
-def site():
+def database():
     # make a connection with the database
     connection = mysql.connector.connect(
         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
@@ -42,8 +48,8 @@ def site():
     elif name == 'organism':
         search = " where organism_species like '%" + request.args.get(
             'description') + "%' or organism_genus like '%" + request.args.get(
-            'description') + "%' or organism_family like '%" + request.args.get(
-            'description') + "%' "
+            'description') + "%' or organism_family like '%" + \
+                 request.args.get('description') + "%' "
 
     # new list with the values that the user selected which should be shown
     # in the table
@@ -56,7 +62,6 @@ def site():
             show_values.append(value_2)
     if values_1[-1] in request.args:
         show_values.append(values_1[-1])
-
     # seperate the values with a comma
     select = ','.join(show_values)
 
@@ -89,13 +94,15 @@ def site():
         # return empty html file when site is loaded for first time
         return render_template('database.html', data='',
                                show_values=['header', 'sequence', 'score'],
-                               values_1=values_1, values_2=values_2, count=None,
+                               values_1=values_1, values_2=values_2,
+                               count=None,
                                ncbi_links=None, rows='')
     else:
         # run query in database
         cursor.execute(query)
         rows = cursor.fetchall()
         ncbi_links = []
+
         if 'Accession' in show_values:
             for row in rows:
                 link = 'https://www.ncbi.nlm.nih.gov/protein/' + row[-1]
@@ -105,13 +112,107 @@ def site():
             return render_template('database.html', data=data,
                                    show_values=show_values,
                                    count=count, values_1=values_1,
-                                   values_2=values_2, accession=True, rows=rows)
+                                   values_2=values_2, accession=True,
+                                   rows=rows)
         else:
             data = rows
             return render_template('database.html', data=data,
                                    show_values=show_values,
                                    values_1=values_1, values_2=values_2,
                                    count=count, accession=False, rows=rows)
+
+
+@app.route('/blast', methods=['GET', 'POST'])
+def blast():
+    input_seq = request.args.get('sequence')
+    header = request.args.get('header')
+
+    # name of organism is between brackets [ ]
+    org = r'\[(.*?)\]'
+
+    # definition of protein is untill opening bracket [
+    defi = r'.*\['
+
+    result_list = []
+    organism = ''
+    protein = ''
+    if input_seq is None:
+        input_seq = ''
+    sequence = Seq(input_seq)
+
+    if input_seq != '':
+        warnings.simplefilter('ignore', BiopythonWarning)
+        result_handle = NCBIWWW.qblast('blastx', 'nr', sequence,
+                                       word_size=6, gapcosts='11 1',
+                                       expect=0.0001, format_type='XML')
+        blast_results = SearchIO.parse(result_handle, 'blast-xml')
+        for result in blast_results:
+            for res in range(len(result)):
+                accession = result[res].accession
+                definition = result[res].description
+                ident_num = result[res][0].ident_num
+                align_len = result[res][0].hit_span
+                ident_perc = round(ident_num / align_len * 100, 2)
+                match_org = re.search(org, definition)
+                match_def = re.search(defi, definition)
+                if match_org:
+                    organism = match_org.group().replace('[', '').replace(']',
+                                                                          '')
+                if match_def:
+                    protein = match_def.group().replace('[', '')
+                result_list.append(
+                    [header, input_seq, protein, organism, ident_perc,
+                     accession])
+
+        # code to insert the results into the database, but to avoid getting
+        # junk code in the database, we decided to comment it out.
+
+        # for result in result_list:
+        #     connection = mysql.connector.connect(
+        #         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.'
+        #              'database.azure.com',
+        #         user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
+        #         database='fifkv',
+        #         password='613633')
+        #     cursor = connection.cursor()
+        #     cursor.execute("select count(*) from sequence")
+        #     result_seq = cursor.fetchone()
+        #     amount_seq = [amount for amount in result_seq][0]
+        #     seq_id = amount_seq + 1
+        #     cursor.execute("select count(*) from protein_attribute")
+        #     result_prot = cursor.fetchone()
+        #     amount_prot = [amount for amount in result_prot][0]
+        #     prot_id = amount_prot + 1
+        #     cursor.execute(
+        #         "insert into sequence(seq_id, sequence, header, score)"
+        #         " values ('{}', '{}', '{}', null)".format(seq_id,
+        #                                                   result[1],
+        #                                                   result[0]))
+        #     cursor.execute(
+        #         "insert into protein(name_id, definition, "
+        #         "accession) values ('{}', '{}', '{}')".format(prot_id,
+        #                                                       result[2],
+        #                                                       result[5]))
+        #     cursor.execute(
+        #         "insert into organism(organism_id, organism_species, "
+        #         "organism_genus, organism_family)"
+        #         "values ('{}', '{}', null, null)".format(prot_id,
+        #                                                  result[3]))
+        #     cursor.execute(
+        #         "insert into protein_attribute(protein_id, seq_id, "
+        #         "organism_id, name_id, ident_num, pos_num, gap_num, e_value,"
+        #         "bit_score, ident_perc, query_cov) values ('{}', '{}', '{}',"
+        #         " '{}', null, null, null, null, null, '{}', null)".format(
+        #             prot_id, seq_id, prot_id, prot_id, result[4]))
+        #     seq_id += 1
+        #     prot_id += 1
+        #
+        #     connection.commit()
+        #     connection.close()
+
+        return render_template('blast.html', result_list=result_list)
+    else:
+        return render_template('blast.html', result_list=result_list)
 
 
 if __name__ == '__main__':

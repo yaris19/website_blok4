@@ -238,8 +238,8 @@ def insert_database_protein(result_list):
     :param result_list: List with all the results.
     :return: An updated database.
     """
-    # name of protein is between brackets [ ]
-    prot = r'\[(.*?)\]'
+    # name of organism is between brackets [ ]
+    org = r'\[(.*?)\]'
 
     # definition of protein is untill opening bracket [
     definition = r'.*\['
@@ -255,7 +255,7 @@ def insert_database_protein(result_list):
 
     for result in result_list:
         match_def = re.search(definition, result[3])
-        match_prot = re.search(prot, result[3])
+        match_org = re.search(org, result[3])
         if match_def:
             protein = match_def.group().replace('[', '')
             cursor.execute(
@@ -264,8 +264,8 @@ def insert_database_protein(result_list):
                                                               protein,
                                                               result[1]))
 
-            if match_prot:
-                organism = match_prot.group().replace('[', '').replace(']', '')
+            if match_org:
+                organism = match_org.group().replace('[', '').replace(']', '')
                 if result[11] == '' and result[12] == '':
                     cursor.execute(
                         "insert into organism(organism_id, organism_species, "
