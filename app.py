@@ -125,7 +125,7 @@ def database():
 def blast():
     input_seq = request.args.get('sequence')
     sequence = Seq(input_seq)
-    print(sequence)
+    print(sequence )
 
     return render_template('blast.html')
 
