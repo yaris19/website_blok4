@@ -48,14 +48,13 @@
                 <b>Count:</b> Search the database, and count how many times
                 an item occurs. Only <b>1</b> checkbox can be chosen.<br>
 
-                <b>Organism:</b> Search the database for eiter
-                a species, a genus or a family using the text box 'what to look
-                for'.<br>
+                <b>Organism:</b> Search the organism database.
+                The choices are: species, genus and family. (See 'what to
+                look for', for more information)<br>
 
-                <b>Protein:</b> Search the database for eiter
-                a definition or a accession code using the text box 'what to
-                look
-                for'.<br>
+                <b>Protein:</b> Search the protein database.
+                The choices are: accession code and definition. (See 'what
+                to look for', for more information)<br>
 
                 <b>What to look for:</b> Filter something in
                 the database<br>If the previous choice was <b>organism:</b>
@@ -126,16 +125,7 @@
         <p> How does it all work and how has it been made?</p>
         <button class="accordion-about">How does it work?</button>
         <div class="panel-about">
-            <p>This website, made up of Flask and HTML, retrieves the data from
-                the selfmade database which is created with the use of the
-                programming languages: Python and MySQL. <br>
-                The Flask of the site communicates with the database (which is
-                explained under the database block), retrieving all the
-                database data which is visualized. <br><br>
-
-                (The “BLAST” link under the database page takes you to another
-                page where u can BLAST your own sequences which is linked with
-                https://blast.ncbi.nlm.nih.gov/Blast.cgi.) <br></p>
+            <p>Morgan</p>
         </div>
         <button class="accordion-about">How was it made?</button>
         <div class="panel-about">
@@ -160,14 +150,22 @@
         </div>
         <button class="accordion-about">The given task</button>
         <div class="panel-about">
-            <p>The task given was to create a simple interactive methods for
+            <p>The given task was to create a simple interactive method for
                 accessing processed sequencing data through a website. The task
                 was assigned by the HAN Biocentre as a means for them to
                 continue with a assignment from the Productschap Tuinbouw en
                 CNC grondstoffen B.V. The base data received for the
-                project was in a FastQ file and was data acquired after paired
-                end illumina sequencing on metagenomic data.<br> Paired end
-                illumina sequencing used two reads for each sequence</p>
+                project was in a FastQ file and was acquired after paired
+                end illumina sequencing on metagenomic data (paired end
+                illumina sequencing uses two reads for each sequence, a
+                forward and a reverse read with a length of 301 nucleotides).
+                <br> To get the raw data processed a first requirement was to
+                blast the data using a script and that data had to be saved
+                within a database, which would also require a database. After
+                the database had been created and filled with data the database
+                linkage with the site could be tested before further finishing
+                touches could be applied.
+                </p>
         </div>
     </div>
 </div>
@@ -176,36 +174,60 @@
     <div class="text-part">
         <h1>Sources</h1>
         <p> All used sources.</p>
-        chapter 7.1 from<a class="sources-a"
-                           href="http://biopython.org/DIST/docs/tutorial/Tutorial.html">Chang,
-        J., Chapman, B., Friedberg, I.,
-        Hamelryck, T., Hoon, P., Cock, P., … Wilczyński, B. (n.d.). Biopython
-        Tutorial and Cookbook. Retrieved May
-        11, 2019, from
-        http://biopython.org/DIST/docs/tutorial/Tutorial.html</a>
-        <hr>
-        <a href="http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html">Bio.Blast.Record.HSP.
-            (n.d.).
-            Retrieved May 12, 2019, from
-            http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html</a>
-        <hr>
-        <a href="https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html">Bio.Blast.Record.
-            (n.d.). Retrieved
-            May 13, 2019, from
-            https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html</a>
-        <hr>
-        <a href="https://www.biostars.org/p/95101/">Tressler, J., & P. (n.d.).
-            Extracting Accession Numbers With
-            Ncbixml.Parse. Retrieved May 17, 2019, from
-            https://www.biostars.org/p/95101/</a>
-        <hr>
-        <a href="https://www.biostars.org/p/180510/">Biopython - calculating
-            query coverage and Identity. (n.d.).
-            Retrieved May 18, 2019, from https://www.biostars.org/p/180510/</a>
-        <hr>
-        <a href="https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html">Bio.SearchIO._model.hsp.HSP.
-            (n.d.). Retrieved May 14, 2019, from
-            https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html</a><br>
+        <button class="accordion-database">Biopython sources</button>
+        <div class="panel-database">
+            <a href="http://biopython.org/DIST/docs/tutorial/Tutorial.html">Chapter 7.1 from<br>Chang, J., Chapman, B.,
+                Friedberg, I., Hamelryck, T., Hoon, P., Cock, P., … Wilczyński, B. (n.d.). Biopython Tutorial and
+                Cookbook. Retrieved May 11, 2019, from http://biopython.org/DIST/docs/tutorial/Tutorial.html</a>
+            <hr>
+            <a href="http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html">Bio.Blast.Record.HSP.
+                (n.d.).
+                Retrieved May 12, 2019, from
+                http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html</a>
+            <hr>
+            <a href="https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html">Bio.Blast.Record.
+                (n.d.). Retrieved
+                May 13, 2019, from
+                https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html</a>
+            <hr>
+            <a href="https://www.biostars.org/p/95101/">Tressler, J., & P. (n.d.).
+                Extracting Accession Numbers With
+                Ncbixml.Parse. Retrieved May 17, 2019, from
+                https://www.biostars.org/p/95101/</a>
+            <hr>
+            <a href="https://www.biostars.org/p/180510/">Biopython - calculating
+                query coverage and Identity. (n.d.).
+                Retrieved May 18, 2019, from https://www.biostars.org/p/180510/</a>
+            <hr>
+            <a href="https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html">
+                Bio.SearchIO._model.hsp.HSP. (n.d.). Retrieved May 14, 2019, from
+                https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html</a><br>
+        </div>
+        <button class="accordion-database">CSS sources</button>
+        <div class="panel-database">
+            <a href="https://www.w3schools.com/howto/howto_css_image_text.asp">W3Schools. (n.d.). How To Position Text
+                Over an Image. Retrieved May 24, 2019, from https://www.w3schools.com/howto/howto_css_image_text.asp</a>
+        </div>
+        <button class="accordion-database">JavaScript sources</button>
+        <div class="panel-database">
+            <a href="https://www.w3schools.com/howto/howto_js_accordion.asp">W3Schools. (n.d.-a). How To Create an
+                Accordion. Retrieved May 23, 2019, from https://www.w3schools.com/howto/howto_js_accordion.asp</a>
+            <hr>
+            <a href="https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp">W3Schools. (n.d.-b). How To Toggle
+                Between Hiding And Showing an Element. Retrieved May 24, 2019, from
+                https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp</a>
+        </div>
+        <button class="accordion-database">General sources</button>
+        <div class="panel-database">
+            <a href="https://www.python.org/">Python Software Foundation. (n.d.). Welcome to Python.org. Retrieved from
+                https://www.python.org/</a>
+            <hr>
+            <a href="http://flask.pocoo.org/">Ronacher, A. (n.d.). Welcome | Flask (A Python Microframework). Retrieved
+                from http://flask.pocoo.org/</a>
+            <hr>
+            <a href="https://www.mysql.com/">Oracle Corporation. (n.d.). MySQL. Retrieved from https://www.mysql.com/
+            </a>
+        </div>
     </div>
 </div>
 
