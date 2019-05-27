@@ -18,6 +18,12 @@
 </div>
 
 <div class="banner-area" id="Home"></div>
+<div class="slogan_container">
+    <div class="slogan">
+        <b><h2>Mushroom project</h2></b>
+        <b><p>"Providing all composting data needs since 2019"</p></b>
+    </div>
+</div>
 
 <div class="Database-area" id="Database">
     <div class="text-part">
@@ -35,76 +41,76 @@
         </button>
         <div class="panel-database">
             <p>
-                <b>Search:</b> search the database with multiple paramters.
-                A choice can be made aided by checkboxes what to
-                search in the database, e.g. header, defenition etc.<br>
+                <b>Search:</b> Search the database with multiple parameters.
+                A choice can be made by selecting checkboxes to filter your
+                search in the database, e.g. header, definition etc.<br>
 
-                <b>Count:</b> search the database, and count how many times
-                an item occurs. There can only be chosen <b>1</b>
-                checkbox.<br>
+                <b>Count:</b> Search the database, and count how many times
+                an item occurs. Only <b>1</b> checkbox can be chosen.<br>
 
-                <b>Organism:</b> an option to choose to search in the
-                organism database.
+                <b>Organism:</b> Search the organism database.
                 The choices are: species, genus and family. (See 'what to
                 look for', for more information)<br>
 
-                <b>Protein:</b> an option to choose to search in the
-                organism database.
-                The choices are: accession code and defenition. (See what
-                to look for, for more information)<br>
+                <b>Protein:</b> Search the protein database.
+                The choices are: accession code and definition. (See 'what
+                to look for', for more information)<br>
 
-                <b>What to look for:</b> an option to filter something in
+                <b>What to look for:</b> Filter something in
                 the database<br>If the previous choice was <b>organism:</b>
-                the options to search for are a species (e.g.
+                then the options include: a species (e.g.
                 Gammaproteobacteria bacterium), a genus (e.g.
                 Gammaproteobacteria) or a family (e.g. Proteobacteria)<br>
-                If the previous choise was <b>protein:</b> the options to
-                search for are either a defenition (e.g. outer membrane protein
+                If the previous choice was <b>protein:</b> then the options
+                include either a definition (e.g. outer membrane protein
                 assembly factor BamB) or an accession code (e.g. TDJ28483)<br>
 
-                <b>Limit:</b> an option to limit the amount of results that
-                will be shown in a table<br><br>
+                <b>Limit:</b> Limits the amount of results that
+                will be shown in the table.<br><br>
 
-                <b>Search:</b> search the database with all the selected
-                parameters
+                <b>Search:</b> Search the database with all the selected
+                parameters.
                 The options for what to show in the table:
             </p>
 
             <ul class="database-options">
                 <li>
-                    <b>Header:</b> The header of each DNA sequence
+                    <b>Header:</b> The header of each DNA sequence.
                 </li>
                 <li>
-                    <b>Defenition:</b> The defenition of the protein
+                    <b>Definition:</b> The definition of the protein.
                 </li>
                 <li>
-                    <b>Orgaism_species:</b> The name of the species
+                    <b>Organism_species:</b> The name of the species.
                 </li>
                 <li>
                     <b>Ident_perc:</b> The identity percentage, calculated by
                     the amout of identities divided by the length of the
-                    alignment
+                    alignment.
                 </li>
                 <li>
-                    <b>Accession:</b> The accession code (NCBI) of the protein
+                    <b>Accession:</b> The NCBI accession code of the protein.
                 </li>
                 <li>
-                    <b>Sequence:</b> The DNA sequence that is used to BLAST
+                    <b>Sequence:</b> The DNA sequence that is used to BLAST.
                 </li>
                 <li>
                     <b>Organism_genus:</b> The name of the genus, which is
+                    retrieved from the taxonomie browser.
                 </li>
                 <li>
                     <b>Organism_family:</b> The name of the family, which is
+                    retrieved from the taxonomie browser.
                 <li>
-                    <b>Query_cov:</b> The query coverage, calculated by (end of
+                    <b>Query_cov:</b> The query coverage, is calculated by (end
+                    of
                     hit minus begin of hit) divided by the length of the DNA
-                    sequence
+                    sequence.
                 </li>
                 <li>
-                    <b>E_value:</b> The e-value which stands for the amout of
-                    random sequences in the NCBI database with the same of a
-                    higher bitscore
+                    <b>E_value:</b> The e-value which stands for the amount of
+                    random sequences in the NCBI database with the same or a
+                    higher bitscore.
                 </li>
 
             </ul>
@@ -124,24 +130,34 @@
         <button class="accordion-about">How was it made?</button>
         <div class="panel-about">
             <p>
-                First of all, a Python script was made to automatically BLAST
-                200 DNA sequences, in which the tool biopyton was used. All of
+                First of all, a Python script was written to automatically
+                BLAST
+                200 DNA sequences, in which the tool BioPyton was used. All of
                 the data which BLAST provided was saved to an XML file. Then, a
                 Python function was made to parse the XML file, and retrieve
                 the important data. In addition, a Python function was made to
                 automatically insert the retrieved data into a self-created
                 database. <br>
-                Secondly, this website was created, aided by Python and the
+                Secondly, this website was created, using Python and the
                 Flask package.
             </p>
         </div>
         <button class="accordion-about">Who are the creators?</button>
         <div class="panel-about">
-            <p>Stijn</p>
+            <p>The creators of this product are three individuals known as
+                Yaris van Thiel, Morgan Atmodimedjo and Stijn Bruggink.
+            </p>
         </div>
         <button class="accordion-about">The given task</button>
         <div class="panel-about">
-            <p>Stijn, zet er ook bij over forward en reverse sequenties</p>
+            <p>The task given was to create a simple interactive methods for
+                accessing processed sequencing data through a website. The task
+                was assigned by the HAN Biocentre as a means for them to
+                continue with a assignment from the Productschap Tuinbouw en
+                CNC grondstoffen B.V. The base data received for the
+                project was in a FastQ file and was data acquired after paired
+                end illumina sequencing on metagenomic data.<br> Paired end
+                illumina sequencing used two reads for each sequence</p>
         </div>
     </div>
 </div>

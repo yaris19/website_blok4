@@ -48,29 +48,29 @@ a.hover {
 }
 
 .button {
-    /*-moz-box-shadow: 0 1px 0 0 #694632;*/
-    /*-webkit-box-shadow: 0 1px 0 0 #694632;*/
-    /*box-shadow: 0 1px 0 0 #694632;*/
-    background-color: #694632;
-    /*-moz-border-radius: 10px;*/
-    /*-webkit-border-radius: 10px;*/
-    /*border-radius: 10px;*/
+    /*-moz-box-shadow: 0 1px 0 0 #CEB8A2;*/
+    /*-webkit-box-shadow: 0 1px 0 0 #CEB8A2;*/
+    /*box-shadow: 0 1px 0 0 #CEB8A2;*/
+    background-color: #CEB8A2;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
     display: inline-block;
     cursor: pointer;
-    color: #CEB8A2;
+    color: #694632;
     font-family: Arial, "Times New Roman", serif;
     font-size: 18px;
     font-weight: bold;
-    /*padding: 12px 12px;*/
+    padding: 2px 4px;
     margin: 0;
     text-transform: none;
-    /*text-decoration: none;*/
+    text-decoration: none;
 }
 
 .button:hover {
     background-color: #694632;
     color: #CEB8A2;
-    text-shadow: #CEB8A2;
+    /*text-shadow: #CEB8A2;*/
 }
 
 .button:active {
@@ -291,4 +291,20 @@ tr:nth-child(odd) {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+}
+
+
+.slogan_container {
+  position: relative;
+}
+
+.slogan {
+  position: absolute;
+  bottom: 370px;
+  right: 550px;
+  background-color: rgba(209, 202, 194, 0.3);
+  color: black;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 25px;
 }
