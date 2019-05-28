@@ -1,7 +1,10 @@
-# requirements file
-Flask == 1.0.2
-Jinja2 == 2.10.1
-Werkzeug == 0.15.2
-bio == 0.1.0
-mysql-connector == 2.2.9
-biopython == 1.73
+bio==0.1.0
+biopython==1.73
+Click==7.0
+Flask==1.0.2
+itsdangerous==1.1.0
+Jinja2==2.10.1
+MarkupSafe==1.1.1
+mysql-connector==2.2.9
+numpy==1.16.3
+Werkzeug==0.15.2
