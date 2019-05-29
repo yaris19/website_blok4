@@ -139,6 +139,7 @@ def blast():
     sequence = Seq(input_seq)
 
     if input_seq != '':
+        # same blast parameters
         result_handle = NCBIWWW.qblast('blastx', 'nr', sequence,
                                        word_size=6, gapcosts='11 1',
                                        expect=0.0001, format_type='XML')

@@ -312,3 +312,14 @@ tr:nth-child(odd) {
 hr {
     border: 2px solid #421a00;
 }
+
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #D1CAC2;
+    color: #000000;
+    text-align: left;
+}
