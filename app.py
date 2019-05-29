@@ -60,7 +60,7 @@ def database():
             show_values.append(value_2)
     if values_1[-1] in request.args:
         show_values.append(values_1[-1])
-    # seperate the values with a comma
+    # separate the values with a comma
     select = ','.join(show_values)
 
     # get choice from user
@@ -128,7 +128,7 @@ def blast():
     # name of organism is between brackets [ ]
     org = r'\[(.*?)\]'
 
-    # definition of protein is untill opening bracket [
+    # definition of protein is until opening bracket [
     defi = r'.*\['
 
     result_list = []
@@ -160,52 +160,6 @@ def blast():
                 result_list.append(
                     [header, input_seq, protein, organism, ident_perc,
                      accession])
-
-        # code to insert the results into the database, but to avoid getting
-        # junk code in the database, we decided to comment it out.
-
-        # for result in result_list:
-        #     connection = mysql.connector.connect(
-        #         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.'
-        #              'database.azure.com',
-        #         user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
-        #         database='fifkv',
-        #         password='613633')
-        #     cursor = connection.cursor()
-        #     cursor.execute("select count(*) from sequence")
-        #     result_seq = cursor.fetchone()
-        #     amount_seq = [amount for amount in result_seq][0]
-        #     seq_id = amount_seq + 1
-        #     cursor.execute("select count(*) from protein_attribute")
-        #     result_prot = cursor.fetchone()
-        #     amount_prot = [amount for amount in result_prot][0]
-        #     prot_id = amount_prot + 1
-        #     cursor.execute(
-        #         "insert into sequence(seq_id, sequence, header, score)"
-        #         " values ('{}', '{}', '{}', null)".format(seq_id,
-        #                                                   result[1],
-        #                                                   result[0]))
-        #     cursor.execute(
-        #         "insert into protein(name_id, definition, "
-        #         "accession) values ('{}', '{}', '{}')".format(prot_id,
-        #                                                       result[2],
-        #                                                       result[5]))
-        #     cursor.execute(
-        #         "insert into organism(organism_id, organism_species, "
-        #         "organism_genus, organism_family)"
-        #         "values ('{}', '{}', null, null)".format(prot_id,
-        #                                                  result[3]))
-        #     cursor.execute(
-        #         "insert into protein_attribute(protein_id, seq_id, "
-        #         "organism_id, name_id, ident_num, pos_num, gap_num, e_value,"
-        #         "bit_score, ident_perc, query_cov) values ('{}', '{}', '{}',"
-        #         " '{}', null, null, null, null, null, '{}', null)".format(
-        #             prot_id, seq_id, prot_id, prot_id, result[4]))
-        #     seq_id += 1
-        #     prot_id += 1
-        #
-        #     connection.commit()
-        #     connection.close()
 
         return render_template('blast.html', result_list=result_list)
     else:
