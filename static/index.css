@@ -4,6 +4,12 @@ body {
     font-family: Arial, "Times New Roman", serif;
 }
 
+/*smooth scrolling (not supported on Edge and Safari*/
+html {
+    scroll-behavior: smooth;
+}
+
+/*The navbar settings*/
 .navbar {
     position: fixed;
     display: flex;
@@ -17,14 +23,12 @@ body {
     overflow: auto;
     z-index: 1;
 }
-
 .nav {
     display: flex;
     justify-content: right;
     list-style: none;
     margin-right: 15%;
 }
-
 .logo {
     flex: 1 1 auto;
     margin-left: 10%;
@@ -34,23 +38,52 @@ body {
     font-size: 35px;
 }
 
+/*The homepage photo*/
+.banner-area {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url(background.jpg) no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+/*The slogan on the banner*/
+.slogan_container {
+  position: relative;
+}
+.slogan {
+    position: absolute;
+    bottom: 370px;
+    right: 550px;
+    background-color: rgba(209, 202, 194, 0.3);
+    color: black;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 25px;
+}
+
+/*All text settings*/
 a {
     margin: 15px;
     color: #000000;
     text-decoration: none;
-    /*text-transform: uppercase;*/
     target-name: new;
     target-new: tab;
 }
-
 a.hover {
     color: #000;
 }
+h1 {
+    font-size: 40px;
+    font-family: Arial, "Times New Roman", serif;
+}
+p {
+    font-size: 20px;
+}
 
+/*The button settings for the link to the database*/
 .button {
-    /*-moz-box-shadow: 0 1px 0 0 #CEB8A2;*/
-    /*-webkit-box-shadow: 0 1px 0 0 #CEB8A2;*/
-    /*box-shadow: 0 1px 0 0 #CEB8A2;*/
     background-color: #CEB8A2;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -66,29 +99,17 @@ a.hover {
     text-transform: none;
     text-decoration: none;
 }
-
 .button:hover {
     background-color: #694632;
     color: #CEB8A2;
-    /*text-shadow: #CEB8A2;*/
 }
-
 .button:active {
     position: relative;
     top: 1px;
 }
 
-.banner-area {
-    position: relative;
-    background-image: url(background.jpg);
-    width: 100%;
-    height: 100vh;
-    background-repeat: no-repeat;
-    -webkit-background-size: cover;
-    background-size: cover;
-}
-
-.Database-area {
+/*All the settings for the database*/
+.Database_area {
     position: relative;
     display: flex;
     justify-content: space-around;
@@ -100,33 +121,6 @@ a.hover {
     background: #694632;
     color: #CEB8A2;
 }
-
-.About_area {
-    position: relative;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    background: #CEB8A2;
-    color: #694632;
-}
-
-.Sources_area {
-    position: relative;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    background: #694632;
-    color: #CEB8A2;
-}
-
 .Database {
     padding-top: 70px;
     position: relative;
@@ -140,8 +134,6 @@ a.hover {
     background: #694632;
     color: #CEB8A2;
 }
-
-
 .Table-area {
     position: relative;
     display: flex;
@@ -152,35 +144,16 @@ a.hover {
     width: 100%;
     height: 700px;
 }
-
 .text-part {
     width: 65%;
     height: 80%;
 }
-
 .table-part {
     width: 95%;
     height: 85%;
-}
-
-h1 {
-    font-size: 40px;
-    font-family: Arial, "Times New Roman", serif;
-}
-
-p {
-    font-size: 20px;
-}
-
-
-.database-options {
+}.database-options {
     font-size: 18px;
 }
-
-html {
-    scroll-behavior: smooth;
-}
-
 table {
     border-spacing: 1px;
     border-collapse: collapse;
@@ -191,7 +164,6 @@ table {
     margin: 0 auto;
     position: relative;
 }
-
 th {
     height: 50px;
     width: auto;
@@ -200,7 +172,6 @@ th {
     background-color: #d4d7de;
     font-size: 16px;
 }
-
 td {
     height: 25px;
     width: auto;
@@ -211,11 +182,11 @@ td {
     word-break: break-word;
     font-size: 15px;
 }
-
 tr:nth-child(odd) {
     background-color: #e5e7e9;
 }
 
+/*The button found in the database page*/
 .button-show {
     background-color: #694632;
     border: none;
@@ -225,6 +196,39 @@ tr:nth-child(odd) {
     cursor: pointer;
 }
 
+/*The about settings*/
+.About_area {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background: #CEB8A2;
+    color: #694632;
+}
+
+/*Sources settings*/
+.Sources_area {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background: #694632;
+    color: #CEB8A2;
+}
+/*The lines inbetween the sources*/
+hr {
+    border: 2px solid #421a00;
+}
+
+/*Accordion settings (The fold out parts under database, about and sources)*/
 .accordion-about {
     background-color: #CEB8A2;
     color: #694632;
@@ -237,7 +241,6 @@ tr:nth-child(odd) {
     font-size: 20px;
     transition: 0.4s;
 }
-
 .accordion-about:after {
     content: '\002B';
     color: #694632;
@@ -245,11 +248,9 @@ tr:nth-child(odd) {
     float: right;
     margin-left: 5px;
 }
-
 .active-about:after {
     content: "\2212";
 }
-
 .panel-about {
     padding: 0 18px;
     background-color: #CEB8A2;
@@ -257,8 +258,6 @@ tr:nth-child(odd) {
     overflow: hidden;
     transition: max-height 0.2s ease-out;
 }
-
-
 .accordion-database {
     background-color: #694632;
     color: #CEB8A2;
@@ -271,8 +270,6 @@ tr:nth-child(odd) {
     font-size: 20px;
     transition: 0.4s;
 }
-
-
 .accordion-database:after {
     content: '\002B';
     color: #CEB8A2;
@@ -280,11 +277,9 @@ tr:nth-child(odd) {
     float: right;
     margin-left: 5px;
 }
-
 .active-database:after {
     content: "\2212";
 }
-
 .panel-database {
     padding: 0 18px;
     background-color: #694632;
@@ -293,27 +288,7 @@ tr:nth-child(odd) {
     transition: max-height 0.2s ease-out;
 }
 
-
-.slogan_container {
-  position: relative;
-}
-
-.slogan {
-  position: absolute;
-  bottom: 370px;
-  right: 550px;
-  background-color: rgba(209, 202, 194, 0.3);
-  color: black;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 25px;
-}
-
-hr {
-    border: 2px solid #421a00;
-}
-
-
+/*The footer with the contact link*/
 .footer {
     position: fixed;
     left: 0;
