@@ -11,11 +11,21 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
+    """
+    the home page
+    :return: a rendered template of website.html
+    """
     return render_template('website.html')
 
 
 @app.route('/database', methods=['GET', 'POST'])
 def database():
+    """
+    Retrieves the settings the user has selected. Creates a query which can be
+    used to retrieve the data from the database.
+    :return: a renderend template of database.html, with the results based on
+    what the user selected formatted into a table.
+    """
     # make a connection with the database
     connection = mysql.connector.connect(
         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.azure.com',
@@ -23,6 +33,7 @@ def database():
         database='fifkv',
         password='613633')
     cursor = connection.cursor()
+    # all the options the user can select
     values_1 = ['Header', 'Definition', 'Organism_species', 'Ident_perc',
                 'Accession']
     values_2 = ['Sequence', 'Organism_genus', 'Organism_family', 'Query_cov',
@@ -60,11 +71,13 @@ def database():
             show_values.append(value_2)
     if values_1[-1] in request.args:
         show_values.append(values_1[-1])
+
     # separate the values with a comma
     select = ','.join(show_values)
 
     # get choice from user
     choice = request.args.get('choice', False)
+
     # default choice is a regular select statement, so count statement is false
     count = False
     query = "select " + select + " from protein p join protein_attribute" \
@@ -86,12 +99,9 @@ def database():
         count = True
 
     if not show_values:
-        # query = "select header, sequence, score from sequence"
-        # cursor.execute(query)
-        # rows = cursor.fetchall()
         # return empty html file when site is loaded for first time
         return render_template('database.html', data='',
-                               show_values=['header', 'sequence', 'score'],
+                               show_values='',
                                values_1=values_1, values_2=values_2,
                                count=None,
                                ncbi_links=None, rows='')
@@ -103,9 +113,14 @@ def database():
 
         if 'Accession' in show_values:
             for row in rows:
+                # get the ncbi link of the accession
                 link = 'https://www.ncbi.nlm.nih.gov/protein/' + row[-1]
                 ncbi_links.append(link)
+
+            # zip rows list and ncbi_links list, so it can be iterated
+            # simultaneously
             data = zip(rows, ncbi_links)
+
             # return html file with all the variables
             return render_template('database.html', data=data,
                                    show_values=show_values,
@@ -113,6 +128,8 @@ def database():
                                    values_2=values_2, accession=True,
                                    rows=rows)
         else:
+            # if user did not select accession, only return data retrieved from
+            # database
             data = rows
             return render_template('database.html', data=data,
                                    show_values=show_values,
@@ -122,6 +139,14 @@ def database():
 
 @app.route('/blast', methods=['GET', 'POST'])
 def blast():
+    """
+    Retrieve the user sumbitted header and sequence, and blast it with the same
+    parameters as in the database. There is a function to insert the
+    data into the database. But we decided to comment it out, to prevent
+    getting bad data into the database
+    :return: a renderend template of blast.html, with the results based on
+    what the user used as sequence into a table.
+    """
     input_seq = request.args.get('sequence')
     header = request.args.get('header')
 
@@ -146,6 +171,7 @@ def blast():
         blast_results = SearchIO.parse(result_handle, 'blast-xml')
         for result in blast_results:
             for res in range(len(result)):
+                # get the usefull data
                 accession = result[res].accession
                 definition = result[res].description
                 ident_num = result[res][0].ident_num
@@ -161,6 +187,53 @@ def blast():
                 result_list.append(
                     [header, input_seq, protein, organism, ident_perc,
                      accession])
+
+        # code to insert the results into the database, but to avoid getting
+        # bad data in the database, we decided to comment it out.
+
+        # for result in result_list:
+        #     connection = mysql.connector.connect(
+        #         host='hannl-hlo-bioinformatica-mysqlsrv.mysql.database.'
+        #              'azure.com',
+        #         user='fifkv@hannl-hlo-bioinformatica-mysqlsrv',
+        #         database='fifkv',
+        #         password='613633')
+        #     cursor = connection.cursor()
+        #     cursor.execute("select count(*) from sequence")
+        #     result_seq = cursor.fetchone()
+        #     amount_seq = [amount for amount in result_seq][0]
+        #     seq_id = amount_seq + 1
+        #     cursor.execute("select count(*) from protein_attribute")
+        #     result_prot = cursor.fetchone()
+        #     amount_prot = [amount for amount in result_prot][0]
+        #     prot_id = amount_prot + 1
+        #     cursor.execute(
+        #         "insert into sequence(seq_id, sequence, header, score)"
+        #         " values ('{}', '{}', '{}', null)".format(seq_id,
+        #                                                   result[1],
+        #                                                   result[0]))
+        #     cursor.execute(
+        #         "insert into protein(name_id, definition, "
+        #         "accession) values ('{}', '{}', '{}')".format(prot_id,
+        #                                                       result[2],
+        #                                                       result[5]))
+        #     cursor.execute(
+        #         "insert into organism(organism_id, organism_species, "
+        #         "organism_genus, organism_family)"
+        #         "values ('{}', '{}', null, null)".format(prot_id,
+        #                                                  result[3]))
+        #     cursor.execute(
+        #         "insert into protein_attribute(protein_id, seq_id, "
+        #         "organism_id, name_id, ident_num, pos_num, gap_num, "
+        #         "e_value, bit_score, ident_perc, query_cov) "
+        #         "values ('{}', '{}', '{}', '{}', null, null, null, null, "
+        #         "null, '{}', null)".format(prot_id, seq_id, prot_id,
+        #                                    prot_id, result[4]))
+        #     seq_id += 1
+        #     prot_id += 1
+        #
+        #     connection.commit()
+        #     connection.close()
 
         return render_template('blast.html', result_list=result_list)
     else:
