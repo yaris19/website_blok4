@@ -1,0 +1,300 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, "Times New Roman", serif;
+}
+
+/*smooth scrolling (not supported on Edge and Safari*/
+html {
+    scroll-behavior: smooth;
+}
+
+/*The navbar settings*/
+.navbar {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #D1CAC2;
+    width: 100%;
+    height: 70px;
+    overflow: auto;
+    z-index: 1;
+}
+.nav {
+    display: flex;
+    justify-content: right;
+    list-style: none;
+    margin-right: 15%;
+}
+.logo {
+    flex: 1 1 auto;
+    margin-left: 10%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+/*The homepage photo*/
+.banner-area {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url(background.jpg) no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+/*The slogan on the banner*/
+.slogan_container {
+  position: relative;
+}
+.slogan {
+    position: absolute;
+    bottom: 370px;
+    right: 550px;
+    background-color: rgba(209, 202, 194, 0.3);
+    color: black;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 25px;
+}
+
+/*All text settings*/
+a {
+    margin: 15px;
+    color: #000000;
+    text-decoration: none;
+    target-name: new;
+    target-new: tab;
+}
+a.hover {
+    color: #000;
+}
+h1 {
+    font-size: 40px;
+    font-family: Arial, "Times New Roman", serif;
+}
+p {
+    font-size: 20px;
+}
+
+/*The button settings for the link to the database*/
+.button {
+    background-color: #CEB8A2;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    display: inline-block;
+    cursor: pointer;
+    color: #694632;
+    font-family: Arial, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin: 0;
+    text-transform: none;
+    text-decoration: none;
+}
+.button:hover {
+    background-color: #694632;
+    color: #CEB8A2;
+}
+.button:active {
+    position: relative;
+    top: 1px;
+}
+
+/*All the settings for the database*/
+.Database_area {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background: #694632;
+    color: #CEB8A2;
+}
+.Database {
+    padding-top: 70px;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    background: #694632;
+    color: #CEB8A2;
+}
+.Table-area {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: 700px;
+}
+.text-part {
+    width: 65%;
+    height: 80%;
+}
+.table-part {
+    width: 95%;
+    height: 85%;
+}.database-options {
+    font-size: 18px;
+}
+table {
+    border-spacing: 1px;
+    border-collapse: collapse;
+    border-radius: 20px;
+    background: #ffffff;
+    overflow: hidden;
+    width: auto;
+    margin: 0 auto;
+    position: relative;
+}
+th {
+    height: 50px;
+    width: auto;
+    text-align: center;
+    border-bottom: 3px solid black;
+    background-color: #d4d7de;
+    font-size: 16px;
+}
+td {
+    height: 25px;
+    width: auto;
+    text-align: center;
+    vertical-align: middle;
+    padding: 7px;
+    border-top: 1px solid black;
+    word-break: break-word;
+    font-size: 15px;
+}
+tr:nth-child(odd) {
+    background-color: #e5e7e9;
+}
+
+/*The button found in the database page*/
+.button-show {
+    background-color: #694632;
+    border: none;
+    color: #CEB8A2;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/*The about settings*/
+.About_area {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background: #CEB8A2;
+    color: #694632;
+}
+
+/*Sources settings*/
+.Sources_area {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background: #694632;
+    color: #CEB8A2;
+}
+/*The lines inbetween the sources*/
+hr {
+    border: 2px solid #421a00;
+}
+
+/*Accordion settings (The fold out parts under database, about and sources)*/
+.accordion-about {
+    background-color: #CEB8A2;
+    color: #694632;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 20px;
+    transition: 0.4s;
+}
+.accordion-about:after {
+    content: '\002B';
+    color: #694632;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+.active-about:after {
+    content: "\2212";
+}
+.panel-about {
+    padding: 0 18px;
+    background-color: #CEB8A2;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+.accordion-database {
+    background-color: #694632;
+    color: #CEB8A2;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 20px;
+    transition: 0.4s;
+}
+.accordion-database:after {
+    content: '\002B';
+    color: #CEB8A2;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+.active-database:after {
+    content: "\2212";
+}
+.panel-database {
+    padding: 0 18px;
+    background-color: #694632;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+/*The footer with the contact link*/
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #D1CAC2;
+    color: #000000;
+    text-align: left;
+}

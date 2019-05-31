@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mushroom project</title>
+    <link rel="stylesheet"
+          href='{{ url_for('static', filename= 'index.css') }}'>
+</head>
+<body>
+<div class="navbar">
+    <a href="#" class="logo">Mushroom project</a>
+    <ul class="nav">
+        <li><a href="#Home">Home</a></li>
+        <li><a href="#Database">Database</a></li>
+        <li><a href="#About">About</a></li>
+        <li><a href="#Sources">Sources</a></li>
+    </ul>
+</div>
+
+<div class="banner-area" id="Home"></div>
+<div class="slogan_container">
+    <div class="slogan">
+        <b><h2>Mushroom project</h2></b>
+        <b><p>"Providing all composting data needs since 2019"</p></b>
+    </div>
+</div>
+
+<div class="Database_area" id="Database">
+    <div class="text-part">
+        <h1>Database</h1>
+        <p>
+            The <a href="/database" class="button">database</a> contains data
+            of 200 DNA sequences provided by BLAST. In total 174 sequences had
+            one or more results. Only the first 30 results per sequence have
+            been saved to the database. If a sequence had less than 30 results,
+            all of its results have been saved. The database can be searched
+            with multiple parameters.
+        </p>
+        <button class="accordion-database">More information about the
+            parameters
+        </button>
+        <div class="panel-database">
+            <p>
+                <b>Search:</b> Search the database with multiple parameters.
+                A choice can be made by selecting checkboxes to filter your
+                search in the database, e.g. header, definition etc.<br>
+
+                <b>Count:</b> Search the database, and count how many times
+                an item occurs. Only <b>1</b> checkbox can be chosen.<br>
+
+                <b>Organism:</b> Search the organism database.
+                The choices are: species, genus and family. (See 'what to
+                look for', for more information)<br>
+
+                <b>Protein:</b> Search the protein database.
+                The choices are: accession code and definition. (See 'what
+                to look for', for more information)<br>
+
+                <b>What to look for:</b> Filter something in
+                the database<br>If the previous choice was <b>organism:</b>
+                then the options include: a species (e.g.
+                Gammaproteobacteria bacterium), a genus (e.g.
+                Gammaproteobacteria) or a family (e.g. Proteobacteria)<br>
+                If the previous choice was <b>protein:</b> then the options
+                include either a definition (e.g. outer membrane protein
+                assembly factor BamB) or an accession code (e.g. TDJ28483)<br>
+
+                <b>Limit:</b> Limits the amount of results that
+                will be shown in the table.<br><br>
+
+                <b>Search:</b> Search the database with all the selected
+                parameters.
+                The options for what to show in the table:
+            </p>
+
+            <ul class="database-options">
+                <li>
+                    <b>Header:</b> The header of each DNA sequence.
+                </li>
+                <li>
+                    <b>Definition:</b> The definition of the protein.
+                </li>
+                <li>
+                    <b>Organism_species:</b> The name of the species.
+                </li>
+                <li>
+                    <b>Ident_perc:</b> The identity percentage, calculated by
+                    the amout of identities divided by the length of the
+                    alignment.
+                </li>
+                <li>
+                    <b>Accession:</b> The NCBI accession code of the protein,
+                    which contains a link that redirects to the NCBI protein
+                    database with that specific accession code.
+
+                </li>
+                <li>
+                    <b>Sequence:</b> The DNA sequence that is used to BLAST.
+                </li>
+                <li>
+                    <b>Organism_genus:</b> The name of the genus, which is
+                    retrieved from the taxonomie browser.
+                </li>
+                <li>
+                    <b>Organism_family:</b> The name of the family, which is
+                    retrieved from the taxonomie browser.
+                <li>
+                    <b>Query_cov:</b> The query coverage, is calculated by (end
+                    of
+                    hit minus begin of hit) divided by the length of the DNA
+                    sequence.
+                </li>
+                <li>
+                    <b>E_value:</b> The e-value which stands for the amount of
+                    random sequences in the NCBI database with the same or a
+                    higher bitscore.
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="About_area" id="About">
+    <div class="text-part">
+        <h1>About</h1>
+        <button class="accordion-about">How does it work?</button>
+        <div class="panel-about">
+            <p>This website, made up of Flask and HTML, retrieves the data from
+                the selfmade database
+                which is created with the use of the programming languages:
+                Python and MySQL. <br>
+                The Flask of the site communicates with the database (which is
+                explained under the database block),
+                retrieving all the database data which is visualized. <br>
+                The “BLAST” link under the database page takes you to another
+                page where u can BLAST
+                your own sequences which is linked with
+                https://blast.ncbi.nlm.nih.gov/Blast.cgi. <br>
+                The same parameters are applied to blast as in the database.
+
+            </p>
+        </div>
+        <button class="accordion-about">How was it made?</button>
+        <div class="panel-about">
+            <p>
+                First of all, a Python script was written to automatically
+                BLAST
+                200 DNA sequences, in which the tool BioPyton was used. All of
+                the data which BLAST provided was saved to an XML file. Then, a
+                Python function was made to parse the XML file, and retrieve
+                the important data. In addition, a Python function was made to
+                automatically insert the retrieved data into a self-created
+                database. <br>
+                Secondly, this website was created, using Python and the
+                Flask package.
+            </p>
+        </div>
+        <button class="accordion-about">Who are the creators?</button>
+        <div class="panel-about">
+            <p>The creators of this product are three individuals known as
+                Yaris van Thiel, Morgan Atmodimedjo and Stijn Bruggink.
+            </p>
+        </div>
+        <button class="accordion-about">The given task</button>
+        <div class="panel-about">
+            <p>The given task was to create a simple interactive method for
+                accessing processed sequencing data through a website. The task
+                was assigned by the HAN Biocentre as a means for them to
+                continue with a assignment from the Productschap Tuinbouw en
+                CNC grondstoffen B.V. The base data received for the
+                project was in a FastQ file and was acquired after paired
+                end illumina sequencing on metagenomic data (paired end
+                illumina sequencing uses two reads for each sequence, a
+                forward and a reverse read with a length of 301 nucleotides).
+                <br> To get the raw data processed a first requirement was to
+                blast the data using a python script and that data had to be saved
+                within a database. After the database had been created and filled
+                with data it had to be linked to the site before further finishing
+                touches could be applied.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="Sources_area" id="Sources">
+    <div class="text-part">
+        <h1>Sources</h1>
+        <button class="accordion-database">Biopython sources</button>
+        <div class="panel-database">
+            <a href="http://biopython.org/DIST/docs/tutorial/Tutorial.html">Chapter
+                7.1 from<br>Chang, J., Chapman, B.,
+                Friedberg, I., Hamelryck, T., Hoon, P., Cock, P., … Wilczyński,
+                B. (n.d.). Biopython Tutorial and
+                Cookbook. Retrieved May 11, 2019, from
+                http://biopython.org/DIST/docs/tutorial/Tutorial.html</a>
+            <hr>
+            <a href="http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html">Bio.Blast.Record.HSP.
+                (n.d.).
+                Retrieved May 12, 2019, from
+                http://biopython.org/DIST/docs/api/Bio.Blast.Record.HSP-class.html</a>
+            <hr>
+            <a href="https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html">Bio.Blast.Record.
+                (n.d.). Retrieved
+                May 13, 2019, from
+                https://biopython.org/DIST/docs/api/Bio.Blast.Record-pysrc.html</a>
+            <hr>
+            <a href="https://www.biostars.org/p/95101/">Tressler, J., & P.
+                (n.d.).
+                Extracting Accession Numbers With
+                Ncbixml.Parse. Retrieved May 17, 2019, from
+                https://www.biostars.org/p/95101/</a>
+            <hr>
+            <a href="https://www.biostars.org/p/180510/">Biopython -
+                calculating
+                query coverage and Identity. (n.d.).
+                Retrieved May 18, 2019, from
+                https://www.biostars.org/p/180510/</a>
+            <hr>
+            <a href="https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html">
+                Bio.SearchIO._model.hsp.HSP. (n.d.). Retrieved May 14, 2019,
+                from
+                https://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp.HSP-class.html</a><br>
+        </div>
+        <button class="accordion-database">CSS sources</button>
+        <div class="panel-database">
+            <a href="https://www.w3schools.com/howto/howto_css_image_text.asp">W3Schools.
+                (n.d.). How To Position Text
+                Over an Image. Retrieved May 24, 2019, from
+                https://www.w3schools.com/howto/howto_css_image_text.asp</a>
+        </div>
+        <button class="accordion-database">JavaScript sources</button>
+        <div class="panel-database">
+            <a href="https://www.w3schools.com/howto/howto_js_accordion.asp">W3Schools.
+                (n.d.-a). How To Create an
+                Accordion. Retrieved May 23, 2019, from
+                https://www.w3schools.com/howto/howto_js_accordion.asp</a>
+            <hr>
+            <a href="https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp">W3Schools.
+                (n.d.-b). How To Toggle
+                Between Hiding And Showing an Element. Retrieved May 24, 2019,
+                from
+                https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp</a>
+        </div>
+        <button class="accordion-database">General sources</button>
+        <div class="panel-database">
+            <a href="https://www.python.org/">Python Software Foundation.
+                (n.d.). Welcome to Python.org. Retrieved from
+                https://www.python.org/</a>
+            <hr>
+            <a href="http://flask.pocoo.org/">Ronacher, A. (n.d.). Welcome |
+                Flask (A Python Microframework). Retrieved
+                from http://flask.pocoo.org/</a>
+            <hr>
+            <a href="https://www.mysql.com/">Oracle Corporation. (n.d.). MySQL.
+                Retrieved from https://www.mysql.com/<br>
+                <br><br>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <address><a
+            href="mailto:savemycompost@gmail.com?subject=Review my
+            data&body=Paste your table with results:%0D%0A">Contact
+        us!</a></address>
+</div>
+
+<script>
+    let acc = document.querySelectorAll(".accordion-database, .accordion-about");
+    let i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            let panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

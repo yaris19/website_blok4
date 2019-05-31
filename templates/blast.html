@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blast your own sequence</title>
+    <link rel="stylesheet"
+          href="{{ url_for("static", filename= "index.css") }}">
+    <script src= {{ url_for("static", filename="index.js") }}></script>
+</head>
+<body>
+<div class="navbar">
+    <a href="/" class="logo">Mushroom project</a>
+    <ul class="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#Database">Database</a></li>
+        <li><a href="/#About">About</a></li>
+        <li><a href="/#Sources">Sources</a></li>
+    </ul>
+</div>
+<div class="Database" id="Database">
+    <div class="text-part">
+        <form method="get">
+            <h1>BLAST your own sequence</h1>
+            <p>Header: <input type="text" name="header"><br>
+                DNAsequence: <input type="text" name="sequence"><br>
+                <input type="submit" name="submit" value="BLAST"></p>
+            <p><br> The results will not be added to the database. <br>
+                Contact us if u want your results added to the database. <br>
+                We will then check the results on purity.</p>
+        </form>
+    </div>
+</div>
+<div class="Table-area">
+    <div class="table-part">
+        {% if result_list %}
+            {% if data != "" %}
+                <table>
+                <tr>
+                    <th>Sequence</th>
+                    <th>Definition</th>
+                    <th>Organism_species</th>
+                    <th>Identity percentage</th>
+                    <th>Accession</th>
+                </tr>
+                {% for row in result_list %}
+                    <tr>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+
+        </table>
+
+    </div>
+</div>
+<div class="footer">
+    <address><a href="mailto:savemycompost.gmail.com">Contact us!</a></address>
+</div>
+</body>
+</html>
