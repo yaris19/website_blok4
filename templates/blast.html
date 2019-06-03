@@ -33,25 +33,23 @@
 <div class="Table-area">
     <div class="table-part">
         {% if result_list %}
-            {% if result %}
-                <table>
+            <table>
+            <tr>
+                <th>Sequence</th>
+                <th>Definition</th>
+                <th>Organism_species</th>
+                <th>Identity percentage</th>
+                <th>Accession</th>
+            </tr>
+            {% for row in result_list %}
                 <tr>
-                    <th>Sequence</th>
-                    <th>Definition</th>
-                    <th>Organism_species</th>
-                    <th>Identity percentage</th>
-                    <th>Accession</th>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
                 </tr>
-                {% for row in result_list %}
-                    <tr>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                    </tr>
-                {% endfor %}
-            {% endif %}
+            {% endfor %}
         {% endif %}
 
         </table><br><br>
@@ -59,11 +57,12 @@
     </div>
 </div>
 <div class="footer">
-<div class="footer">
-    <address><a
-            href="mailto:savemycompost@gmail.com?subject=Review my data
+    <div class="footer">
+        <address><a
+                href="mailto:savemycompost@gmail.com?subject=Review my data
             &body=Paste your table with results:%0D%0A">Contact
-        us!</a></address>
-</div></div>
+            us!</a></address>
+    </div>
+</div>
 </body>
 </html>
