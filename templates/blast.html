@@ -33,7 +33,7 @@
 <div class="Table-area">
     <div class="table-part">
         {% if result_list %}
-            {% if data != "" %}
+            {% if result %}
                 <table>
                 <tr>
                     <th>Sequence</th>
@@ -52,8 +52,6 @@
                     </tr>
                 {% endfor %}
             {% endif %}
-        {% else %}
-            <p align="center">There are no results with this DNA sequence</p>
         {% endif %}
 
         </table><br><br>
@@ -61,7 +59,11 @@
     </div>
 </div>
 <div class="footer">
-    <address><a href="mailto:savemycompost.gmail.com">Contact us!</a></address>
-</div>
+<div class="footer">
+    <address><a
+            href="mailto:savemycompost@gmail.com?subject=Review my data
+            &body=Paste your table with results:%0D%0A">Contact
+        us!</a></address>
+</div></div>
 </body>
 </html>

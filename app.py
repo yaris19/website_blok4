@@ -234,7 +234,6 @@ def blast():
         #
         #     connection.commit()
         #     connection.close()
-
         return render_template('blast.html', result_list=result_list)
     else:
         return render_template('blast.html', result_list=result_list)
