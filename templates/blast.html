@@ -22,7 +22,7 @@
         <form method="get">
             <h1>BLAST your own sequence</h1>
             <p>Header: <input type="text" name="header"><br>
-                DNAsequence: <input type="text" name="sequence"><br>
+                DNA sequence: <input type="text" name="sequence"><br>
                 <input type="submit" name="submit" value="BLAST"></p>
             <p><br> The results will not be added to the database. <br>
                 Contact us if u want your results added to the database. <br>
@@ -52,9 +52,11 @@
                     </tr>
                 {% endfor %}
             {% endif %}
+        {% else %}
+            <p align="center">There are no results with this DNA sequence</p>
         {% endif %}
 
-        </table>
+        </table><br><br>
 
     </div>
 </div>
