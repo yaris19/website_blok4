@@ -42,8 +42,7 @@ def main():
 
 
 def connection_database():
-    """
-    Make connection to the database
+    """Make connection to the database
     :return: The connection
     """
     connection = mysql.connector.connect(
@@ -55,8 +54,7 @@ def connection_database():
 
 
 def read_file():
-    """
-    Reading the CSV file and doing multiple things:
+    """Reading the CSV file and doing multiple things:
     1. Formatting FASTQ scores to decimal scores
     2. Creating fasta files with the sequences from read 1
     and read 2. Each fasta file contains 50 sequences
@@ -134,8 +132,7 @@ def read_file():
 
 
 def blastx(input_file_name, output_file_name):
-    """
-    Blasting the fasta files
+    """Blasting the fasta files
     :param input_file_name: name of the fasta file
     :param output_file_name:  name of the XML file that will be created
     :return: an XML file with the BLAST output
@@ -153,8 +150,7 @@ def blastx(input_file_name, output_file_name):
 
 
 def read_xml_file(file_name, first50, read1):
-    """
-    Parsing the XML file, and getting values. And calculating values
+    """Parsing the XML file, and getting values. And calculating values
     based on the values in the XML file
     :param file_name: Name of fasta file that should be used
     :param first50: boolean, True if the fasta file contains the first 50
@@ -214,8 +210,7 @@ def read_xml_file(file_name, first50, read1):
 
 
 def insert_database_sequence(seq_forward, seq_reverse):
-    """
-    Inserting the header, sequence and score into the database
+    """Inserting the header, sequence and score into the database
     :param seq_forward: list with the headers, sequences and scores of read 1
     :param seq_reverse: list with the headers, sequences and scores of read 2
     """
@@ -242,8 +237,7 @@ def insert_database_sequence(seq_forward, seq_reverse):
 
 
 def insert_database_protein(result_list):
-    """
-    Inserting all the results into the database
+    """Inserting all the results into the database
     :param result_list: List with all the results
     :return: An updated database
     """
@@ -306,8 +300,7 @@ def insert_database_protein(result_list):
 
 
 def get_genus_family():
-    """
-    Update the organism table with genus and family
+    """Update the organism table with genus and family
     :return: An updated database
     """
     # the entrez function needs an email, so there won't be an error message
@@ -340,11 +333,10 @@ def get_genus_family():
 
 
 def update_query_cover(result_list):
-    """
-    Updates the database with the right query coverage. The query coverage was
-     wrongly calculated in the function read_xml_file. Which has been changed.
-     The variable counter should be changed manually, based on the row thas
-     has not been changed yet.
+    """Updates the database with the right query coverage. The query coverage
+    was wrongly calculated in the function read_xml_file. Which has been
+    changed.The variable counter should be changed manually, based on the row
+    thas has not been changed yet.
     :param result_list: The result list
     :return:
     """

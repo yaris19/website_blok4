@@ -11,8 +11,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    """
-    the home page
+    """The home page
     :return: a rendered template of website.html
     """
     return render_template('website.html')
@@ -20,9 +19,8 @@ def home():
 
 @app.route('/database', methods=['GET', 'POST'])
 def database():
-    """
-    Retrieves the settings the user has selected. Creates a query which can be
-    used to retrieve the data from the database.
+    """Retrieves the settings the user has selected. Creates a query which can
+    be used to retrieve the data from the database.
     :return: a renderend template of database.html, with the results based on
     what the user selected formatted into a table.
     """
@@ -139,9 +137,8 @@ def database():
 
 @app.route('/blast', methods=['GET', 'POST'])
 def blast():
-    """
-    Retrieve the user sumbitted header and sequence, and blast it with the same
-    parameters as in the database. There is a function to insert the
+    """Retrieve the user sumbitted header and sequence, and blast it with the
+    same parameters as in the database. There is a function to insert the
     data into the database. But we decided to comment it out, to prevent
     getting bad data into the database
     :return: a renderend template of blast.html, with the results based on
