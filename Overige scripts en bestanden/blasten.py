@@ -143,6 +143,8 @@ def blastx(input_file_name, output_file_name):
                                    word_size=6, gapcosts='11 1',
                                    expect=0.0001, format_type='XML')
     out_handle = open(output_file_name, 'w')
+    # replace apostrophe and '>' in XML file, because that cannot be 
+    # inserted in the database
     handle = result_handle.read().replace('&apos;', '').replace('&gt;', '>')
     out_handle.write(handle)
     out_handle.close()
