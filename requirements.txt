@@ -2,7 +2,7 @@ biopython==1.72
 Click==7.0
 Flask==1.0.2
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 mysql-connector==2.2.9
 numpy==1.16.3
